@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 04:07 UTC  
+Last reconciled: 2026-11-16 04:12 UTC  
 Owner: CTO / central production integrator
 
 ## Canonical production catalog
@@ -74,7 +74,7 @@ Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is 
 
 | Engineer | Exclusive service key / customer job | State |
 |---|---|---|
-| 04 | `csp-policy-static-audit` — statically inspect a caller-supplied Content-Security-Policy value for parse errors, duplicate directives, and risky source expressions; no policy fetch or browser execution | Reserved 2026-11-16 04:07 UTC; distinct from current HTTP header parsers, cache-control, auth challenge, media negotiation, forwarded-header trust, and header-normalization services. Deterministic, no model/API credits, proposed $0.005; no deployment target or PayAPI quota allocated. |
+| 04 | `csp-policy-static-audit` — statically inspect a caller-supplied Content-Security-Policy value for parse errors, duplicate directives, and risky source expressions; no policy fetch or browser execution | Reserved 2026-11-16 04:12 UTC; implementation/tests/docs/example committed in `defcron/agent-evidence-utility` branch `engineer-04-csp-policy-static-audit` at `c927ed3`. Draft PR #8 open. Focused tests 9/9 and example output matches implementation. Current live catalog 0.8.211 has no CSP route or generic operation. Deterministic/model-free; suggested $0.005. Not deployed/listed; no target or PayAPI quota allocated. |
 
 **Artifact transfer protocol:** cloud workspaces have reported read-only mounts. For an artifact not available through a pushed branch, its owner must reply with a complete unified diff (including tests and README/example), exact base commit, exact test command/output, and source hashes. The CTO integrates it in the writable production repo, reruns checks, and keeps the cloud artifact separately identified. A reply patch or passing prototype test is not a production deployment.
 
