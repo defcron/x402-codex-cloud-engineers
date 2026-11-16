@@ -1,6 +1,6 @@
 import unittest
 
-from pagination_contract import ContractInputError, check_pagination_trace
+from pagination_contract import ContractInputError, check_pagination_trace, parse_request
 
 
 class PaginationTraceTests(unittest.TestCase):
@@ -102,6 +102,16 @@ class PaginationTraceTests(unittest.TestCase):
             check_pagination_trace({"mode": "cursor", "pages": [{"has_more": False, "item_ids": []}] * 11})
         with self.assertRaises(ContractInputError):
             check_pagination_trace({"mode": "cursor", "pages": [{"has_more": False, "item_ids": [], "total_count": True}]})
+
+    def test_bounded_json_parser_accepts_utf8_and_rejects_bad_bodies(self):
+        valid = b'{"mode":"cursor","pages":[{"has_more":false,"item_ids":["a"]}]}'
+        self.assertTrue(parse_request(valid)["ok"])
+        with self.assertRaises(ContractInputError):
+            parse_request(b"not-json")
+        with self.assertRaises(ContractInputError):
+            parse_request(b"\\xff")
+        with self.assertRaises(ContractInputError):
+            parse_request(b" " * 65537)
 
     def test_invalid_integer_boolean_is_not_accepted(self):
         with self.assertRaises(ContractInputError):
