@@ -1,6 +1,6 @@
 # HTTP forwarding policy audit (prototype)
 
-**Engineer 27 · service key:** `http_forwarding_policy_audit_v1`
+**Engineer 27 · service key:** `http-forwarded-header-trust-audit`
 
 **State:** isolated, deterministic prototype; not integrated, deployed, or listed.
 
