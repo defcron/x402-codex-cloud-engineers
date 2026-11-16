@@ -11,18 +11,59 @@
   "inputs": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["openapi_json", "request", "selectors"],
+    "required": [
+      "openapi_json",
+      "request",
+      "selectors"
+    ],
     "properties": {
-      "openapi_json": { "type": "string", "maxLength": 262144, "description": "OpenAPI 3.0/3.1 JSON; no refs or server URL fetch." },
+      "openapi_json": {
+        "type": "string",
+        "maxLength": 262144,
+        "description": "OpenAPI 3.0/3.1 JSON; no refs or server URL fetch."
+      },
       "request": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["method", "path"],
+        "required": [
+          "method",
+          "path"
+        ],
         "properties": {
-          "method": { "type": "string", "enum": ["GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"], "maxLength": 16 },
-          "path": { "type": "string", "maxLength": 2048, "description": "Absolute path only; do not include query or fragment." },
-          "query": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/pair" } },
-          "headers": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/pair" }, "description": "Header names match case-insensitively. Values are never echoed." }
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "PUT",
+              "POST",
+              "DELETE",
+              "OPTIONS",
+              "HEAD",
+              "PATCH",
+              "TRACE"
+            ],
+            "maxLength": 16
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Absolute path only; do not include query or fragment."
+          },
+          "query": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/$defs/pair"
+            }
+          },
+          "headers": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/$defs/pair"
+            },
+            "description": "Header names match case-insensitively. Values are never echoed."
+          }
         }
       },
       "selectors": {
@@ -34,22 +75,54 @@
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["source", "version", "value"],
+              "required": [
+                "source",
+                "version",
+                "value"
+              ],
               "properties": {
-                "source": { "const": "path_prefix" },
-                "version": { "type": "string", "maxLength": 64 },
-                "value": { "type": "string", "maxLength": 512, "description": "Absolute path prefix, matched on segment boundary." }
+                "source": {
+                  "const": "path_prefix"
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 512,
+                  "description": "Absolute path prefix, matched on segment boundary."
+                }
               }
             },
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["source", "version", "name", "value"],
+              "required": [
+                "source",
+                "version",
+                "name",
+                "value"
+              ],
               "properties": {
-                "source": { "enum": ["query", "header"] },
-                "version": { "type": "string", "maxLength": 64 },
-                "name": { "type": "string", "maxLength": 128 },
-                "value": { "type": "string", "maxLength": 256 }
+                "source": {
+                  "enum": [
+                    "query",
+                    "header"
+                  ]
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 256
+                }
               }
             }
           ]
@@ -60,10 +133,19 @@
       "pair": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "value"],
+        "required": [
+          "name",
+          "value"
+        ],
         "properties": {
-          "name": { "type": "string", "maxLength": 128 },
-          "value": { "type": "string", "maxLength": 1024 }
+          "name": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 1024
+          }
         }
       }
     }
@@ -71,28 +153,127 @@
   "response_schema": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["openapi_version", "api_version", "path_count", "operation_count", "selector", "route"],
+    "required": [
+      "openapi_version",
+      "api_version",
+      "path_count",
+      "operation_count",
+      "selector",
+      "route"
+    ],
     "properties": {
-      "openapi_version": { "type": "string" },
-      "api_version": { "type": ["string", "null"], "description": "OpenAPI info.version metadata; this is not the selected routing version." },
-      "path_count": { "type": "integer" },
-      "operation_count": { "type": "integer" },
+      "openapi_version": {
+        "type": "string"
+      },
+      "api_version": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "OpenAPI info.version metadata; this is not the selected routing version."
+      },
+      "path_count": {
+        "type": "integer"
+      },
+      "operation_count": {
+        "type": "integer"
+      },
       "selector": {
         "type": "object",
-        "required": ["status", "selected_version", "matches"],
+        "required": [
+          "status",
+          "selected_version",
+          "matches"
+        ],
         "properties": {
-          "status": { "enum": ["unmatched", "selected", "ambiguous"] },
-          "selected_version": { "type": ["string", "null"] },
-          "matches": { "type": "array", "items": { "type": "object", "required": ["source", "version"], "properties": { "source": { "enum": ["path_prefix", "query", "header"] }, "version": { "type": "string" }, "name": { "type": "string" } } } }
+          "status": {
+            "enum": [
+              "unmatched",
+              "selected",
+              "ambiguous"
+            ]
+          },
+          "selected_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source",
+                "version"
+              ],
+              "properties": {
+                "source": {
+                  "enum": [
+                    "path_prefix",
+                    "query",
+                    "header"
+                  ]
+                },
+                "version": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       },
       "route": {
         "type": "object",
-        "required": ["status", "matched_operation", "allowed_methods"],
+        "required": [
+          "status",
+          "matched_operation",
+          "allowed_methods"
+        ],
         "properties": {
-          "status": { "enum": ["matched", "not_found", "method_not_allowed", "ambiguous"] },
-          "matched_operation": { "type": ["object", "null"], "properties": { "method": { "type": "string" }, "path": { "type": "string" }, "operation_id": { "type": ["string", "null"] }, "summary": { "type": ["string", "null"] } } },
-          "allowed_methods": { "type": "array", "items": { "type": "string" } }
+          "status": {
+            "enum": [
+              "matched",
+              "not_found",
+              "method_not_allowed",
+              "ambiguous"
+            ]
+          },
+          "matched_operation": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "operation_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "summary": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "allowed_methods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       }
     }
@@ -103,7 +284,10 @@
   },
   "errors": {
     "400": "Malformed input, unsupported OpenAPI, invalid method/path/template, or unsupported selector.",
-    "413": "Input, pair count, selector count, path count, operation count, JSON node, or nesting limit exceeded."
+    "405": "HTTP handler accepts POST only.",
+    "413": "Input, pair count, selector count, path count, operation count, JSON node, or nesting limit exceeded.",
+    "415": "HTTP handler requires application/json content type.",
+    "500": "Unexpected handler failures return a generic error without input details."
   },
   "integration": {
     "source_repository": "defcron/agent-evidence-utility",
