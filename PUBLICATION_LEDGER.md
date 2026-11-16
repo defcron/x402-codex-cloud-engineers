@@ -17,7 +17,7 @@ Check the live OpenAPI document immediately before reserving a feature and again
 
 ## Engineer reservation roster
 
-Last roster snapshot: 50 existing chats; 2 active, 48 idle. An active label is not evidence of implementation. The following are exclusive CTO-issued candidate keys. These are design/build reservations only: **no deployment target or PayAPI quota slot is allocated**. Before production integration, the owner must recheck behavior against the live OpenAPI catalog and resolve any genuine overlap.
+Last roster snapshot (2026-11-16): 94 unarchived Codex Cloud threads titled `x402 Cloud Engineer NN` across 50 engineer numbers; all 94 were idle at audit time. Forty-four engineer numbers have duplicate chats and six have one. The canonical assignment roster remains 50 unique service keys; duplicate chat count does not create extra assignments or quota. A separate writable-workspace pilot chat is not included: the x402 environment is runnable, but both `/tmp` and the repository mount rejected writes as read-only. An idle label is not evidence of implementation. The following are exclusive CTO-issued candidate keys. These are design/build reservations only: **no deployment target or PayAPI quota slot is allocated**. Before production integration, the owner must recheck behavior against the live OpenAPI catalog and resolve any genuine overlap.
 
 | Engineer | Exclusive service key / customer job | State and next action |
 |---|---|---|
