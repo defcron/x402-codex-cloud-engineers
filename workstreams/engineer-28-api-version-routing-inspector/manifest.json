@@ -107,9 +107,12 @@
   },
   "integration": {
     "source_repository": "defcron/agent-evidence-utility",
-    "handler_module": "workstreams/engineer-28-api-version-routing-inspector/inspect.mjs",
-    "export": "inspectApiVersionRouting",
-    "registration": "Central integrator should adapt the export to the existing Worker router and existing x402 route middleware; do not create a parallel payment flow.",
+    "handler_module": "workstreams/engineer-28-api-version-routing-inspector/worker-handler.mjs",
+    "export": "handleApiVersionRoutingRequest",
+    "inspection_module": "workstreams/engineer-28-api-version-routing-inspector/inspect.mjs",
+    "inspection_export": "inspectApiVersionRouting",
+    "max_http_body_bytes": 524288,
+    "registration": "Register the HTTP handler in the existing Worker router behind the existing x402 route middleware; do not create a parallel payment flow. The handler itself never charges or settles payment.",
     "discovery": "Before publication, register the real input/output schema, example, and caveats in the existing OpenAPI/MCP discovery surfaces.",
     "payment_verification": "Confirm actual live HTTP 402 price, network, asset, and payTo from the integrated route; price candidate is $0.005 USDC only.",
     "deployment": "No individual Worker, route, deployment permission, or PayAPI quota slot has been assigned. This manifest does not authorize deployment or submission."
