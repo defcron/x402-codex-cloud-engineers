@@ -1,0 +1,8 @@
+{
+  "name": "media-type-negotiator-prototype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
