@@ -1,0 +1,14 @@
+{
+  "request": {
+    "data": {"user": {"name": "Ada", "credential": "private"}, "items": [null, 4]},
+    "pointers": ["/user/name", "/user/credential", "/items/0", "/missing"]
+  },
+  "response": {
+    "results": [
+      {"pointer": "/user/name", "valid": true, "exists": true, "type": "string", "error": null},
+      {"pointer": "/user/credential", "valid": true, "exists": true, "type": "string", "error": null},
+      {"pointer": "/items/0", "valid": true, "exists": true, "type": "null", "error": null},
+      {"pointer": "/missing", "valid": true, "exists": false, "type": null, "error": null}
+    ]
+  }
+}
