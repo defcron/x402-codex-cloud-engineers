@@ -50,6 +50,15 @@ test("rejects malformed JSON, unsupported OpenAPI, and invalid direction", () =>
   assert.throws(() => compareOpenApiVersions("{", "{}"), /valid JSON/);
   assert.throws(() => compareOpenApiVersions(JSON.stringify({ openapi: "2.0", paths: {} }), spec({})), /OpenAPI 3.0 or 3.1/);
   assert.throws(() => compareOpenApiVersions(spec({}), spec({}), { direction: "sideways" }), /direction/);
+  assert.throws(() => compareOpenApiVersions(spec({}), spec({}), []), /options must be an object/);
+});
+
+test("projects the requested direction into each finding", () => {
+  const before = spec({});
+  const after = spec({ "/new": { get: operation() } });
+  const result = compareOpenApiVersions(before, after, { direction: "forward" });
+  assert.equal(result.direction, "forward");
+  assert.equal(result.operations[0].findings[0].impact, "breaking");
 });
 
 test("rejects empty input and excessive JSON nesting", () => {
