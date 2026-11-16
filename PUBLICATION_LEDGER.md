@@ -11,6 +11,8 @@ https://agent-evidence-extractor.defcronyke.workers.dev/openapi.json
 Production source repository: https://github.com/defcron/agent-evidence-utility  
 Production Worker: https://agent-evidence-extractor.defcronyke.workers.dev
 
+Current Codex Cloud environment `x402-codex-cloud-engineers` is marked runnable. Pilot chat `6afa892e-b7d8-8191-a9d7-49f6093d200d` used this exact config; writes to both `/tmp` and `/workspace/x402-codex-cloud-engineers` failed with `Read-only file system`. One pilot created; no 49-chat replacement fleet launched because the selected configuration does not provide writable workspaces.
+
 Check the live OpenAPI document immediately before reserving a feature and again before submission. Compare customer task and behavior, not route names. The 50 existing x402 engineer chats are the current in-flight concept pool; their chat titles are starting concepts, not proof of distinctness. Record a row here before coding. The cloud engineer repository is the shared assignment/checkpoint repository; production integration and deployment remain centralized with the CTO because no individual engineer deployment targets have been assigned.
 
 ## Engineer reservation roster
