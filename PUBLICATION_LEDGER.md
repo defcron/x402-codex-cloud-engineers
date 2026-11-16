@@ -70,6 +70,12 @@ Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is 
 | 49 | `timezone-local-time-disambiguation` — classify one local date-time in an IANA zone as valid, skipped, or ambiguous | Reassigned from existing timestamp conversion; return implementation/test patch |
 | 50 | `webhook-delivery-evidence-bundle` — turn caller-supplied event/attempt records into a post-hoc timeline and digest manifest | Integrated in production commit `b12e94d`, included in release `0.8.210`, after independent diff conflict resolution; distinct from #26 retry planning and #46 signature canonicalization. Full suite 402/402 passed, build and Wrangler dry-run passed. Live example and OpenAPI route verified; unpaid POST returned 402 with `$0.005` on Base. Cloudflare version `f9c3ca3b-0ae5-4746-bdce-3993dfa8cab2`. Engineer independently rechecked live OpenAPI version 0.8.208, example HTTP 200 (example_only=true), and unpaid POST HTTP 402 at $0.005; no payment made. Original PR #1 is closed after integration. PayAPI listing `b1cb8b0d-47df-4e9d-8b83-8c87f8b38a47` submitted 2026-11-16 03:51 UTC; status `pending_review`, not yet live/verified. No paid receipt or organic revenue. Saved environment is available for newly created cloud chats, but runtime configuration of this existing chat is not observable and cannot be retargeted with available app controls. Uncertain `html-forms` submission remains unreconciled. |
 
+## Follow-on reservation
+
+| Engineer | Exclusive service key / customer job | State |
+|---|---|---|
+| 04 | `csp-policy-static-audit` — statically inspect a caller-supplied Content-Security-Policy value for parse errors, duplicate directives, and risky source expressions; no policy fetch or browser execution | Reserved 2026-11-16 04:07 UTC; distinct from current HTTP header parsers, cache-control, auth challenge, media negotiation, forwarded-header trust, and header-normalization services. Deterministic, no model/API credits, proposed $0.005; no deployment target or PayAPI quota allocated. |
+
 **Artifact transfer protocol:** cloud workspaces have reported read-only mounts. For an artifact not available through a pushed branch, its owner must reply with a complete unified diff (including tests and README/example), exact base commit, exact test command/output, and source hashes. The CTO integrates it in the writable production repo, reruns checks, and keeps the cloud artifact separately identified. A reply patch or passing prototype test is not a production deployment.
 
 ## PayAPI submission limit ledger
