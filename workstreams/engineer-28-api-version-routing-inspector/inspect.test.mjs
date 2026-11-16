@@ -92,6 +92,14 @@ test("enforces selector, pair, path, document-depth, and size bounds", () => {
   assert.throws(() => inspectApiVersionRouting({ openapi_json: JSON.stringify(deep), request: request(), selectors: [one] }), /depth 64/);
 });
 
+test("rejects unknown fields at each declared input layer", () => {
+  const base = { openapi_json: document({ "/items": { get: {} } }), request: request("GET", "/items"), selectors: [selector("path_prefix", { value: "/v1" })] };
+  assert.throws(() => inspectApiVersionRouting({ ...base, trace: true }), /unsupported field trace/);
+  assert.throws(() => inspectApiVersionRouting({ ...base, request: { ...base.request, body: {} } }), /unsupported field body/);
+  assert.throws(() => inspectApiVersionRouting({ ...base, request: { ...base.request, query: [{ name: "v", value: "2", secret: "ignored" }] } }), /unsupported field secret/);
+  assert.throws(() => inspectApiVersionRouting({ ...base, selectors: [{ ...base.selectors[0], priority: 2 }] }), /unsupported field priority/);
+});
+
 test("rejects malformed selector sources and request header newlines", () => {
   assert.throws(() => inspect({ "/items": { get: {} } }, request(), [{ source: "accept", version: "2", name: "Accept", value: "x" }]), /unsupported source/);
   assert.throws(() => inspect({ "/items": { get: {} } }, request("GET", "/items", { headers: [{ name: "X-Test", value: "ok" + String.fromCharCode(13, 10) + "injected: yes" }] })), /CR or LF/);
