@@ -13,3 +13,10 @@
 - **Deployment:** Cloudflare identity and account were read; the existing Worker appears in the account's Worker list. No `Workers Scripts Write` scope was verified and no deployment was attempted. Local source checkout is read-only; source repo needs an integration branch and an approved deployment path before release.
 - **PayAPI:** No submission made, so no quota was consumed by this workstream and no cooldown/next-eligible time applies to this attempt. Do not submit this prototype until registry, `html-forms` outcome, provider capacity, route integration, unpaid 402 and functionality are checked.
 - **Next action:** CTO supplies/points to the shared reservation registry and reconciles the earlier `html-forms` submission. Then choose whether to integrate the tested algorithm into the TypeScript Worker route; verify exact script-write permission before deploying.
+
+## Environment verification
+
+- `codex_app__list_cloud_environments` returned a runnable saved configuration named exactly `x402-codex-cloud-engineers`, with repository ID `github-1459329038`, ref `main`, and mount path `x402-codex-cloud-engineers`. GitHub metadata maps repository ID `1459329038` to `defcron/x402-codex-cloud-engineers`.
+- Current task environment status reports provider `cloud`, connected/running, and opaque runtime ID `ccarenv_b64_Y2NhcmVudl8wZDEzZTdmYmVkOWM4MTkxYmQ1Njg4ZWE4MzAwZjM3Nw`; it does not expose the selected saved `environmentConfigId` or map it to that listed configuration.
+- The mounted checkout is at `/workspace/x402-codex-cloud-engineers`, remote `https://github.com/defcron/x402-codex-cloud-engineers.git`, branch `work`, commit `01168bc2a5377a2a7baf1a55879097918315f91a`. This differs from the saved configuration's `main` ref. Therefore, the exact saved environment exists and is configured for the matching repo/mount, but evidence available does not prove this chat is attached to that saved configuration.
+- Re-ran the branch's 11 focused tests from fetched source/test files using an in-memory Python unittest harness; all 11 passed. No files in the mounted checkout were changed.
