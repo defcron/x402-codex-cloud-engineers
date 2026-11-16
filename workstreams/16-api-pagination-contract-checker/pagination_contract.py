@@ -58,7 +58,7 @@ def check_pagination_trace(payload: Any) -> dict:
     """
     envelope = _object(payload, {"mode", "pages"}, {"mode", "pages"}, "request")
     mode = envelope["mode"]
-    if mode not in {"cursor", "offset", "page_number"}:
+    if not isinstance(mode, str) or mode not in {"cursor", "offset", "page_number"}:
         raise ContractInputError("mode must be cursor, offset, or page_number")
     pages = envelope["pages"]
     if not isinstance(pages, list) or not 1 <= len(pages) <= MAX_PAGES:
@@ -71,6 +71,7 @@ def check_pagination_trace(payload: Any) -> dict:
     item_count = 0
     complete = False
     previous_next: Any = None
+    previous_had_more = True
 
     for index, raw_page in enumerate(pages, start=1):
         base = {"item_ids", "has_more"}
@@ -94,6 +95,8 @@ def check_pagination_trace(payload: Any) -> dict:
         has_more = page["has_more"]
         if not isinstance(has_more, bool):
             raise ContractInputError(f"pages[{index - 1}].has_more must be boolean")
+        if index > 1 and not previous_had_more:
+            findings.append({"code": "page_after_terminal", "page": index})
 
         if "total_count" in page:
             current_total = _integer(page["total_count"], "total_count")
@@ -169,6 +172,7 @@ def check_pagination_trace(payload: Any) -> dict:
 
         if index == len(pages):
             complete = not has_more
+        previous_had_more = has_more
 
     if total_count is not None and total_count < len(seen_ids):
         findings.append({"code": "total_count_below_returned_unique_items", "page": len(pages)})
