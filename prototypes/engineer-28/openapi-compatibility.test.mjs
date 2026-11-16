@@ -31,9 +31,19 @@ test("flags removed documented response properties", () => {
 });
 
 test("marks changed unresolved refs inconclusive", () => {
-  const before = spec({ "/items": { get: operation({ responses: { "200": { description: "OK", content: { "application/json": { schema: { $ref: "#/components/schemas/A" } } } } }) } });
-  const after = spec({ "/items": { get: operation({ responses: { "200": { description: "OK", content: { "application/json": { schema: { $ref: "#/components/schemas/B" } } } } } }) } });
-  assert.equal(compareOpenApiVersions(before, after).operations[0].findings[0].backward, "inconclusive");
+  const doc = ref => spec({
+    "/items": {
+      get: operation({
+        responses: {
+          "200": {
+            description: "OK",
+            content: { "application/json": { schema: { $ref: ref } } }
+          }
+        }
+      })
+    }
+  });
+  assert.equal(compareOpenApiVersions(doc("#/components/schemas/A"), doc("#/components/schemas/B")).operations[0].findings[0].backward, "inconclusive");
 });
 
 test("rejects malformed JSON, unsupported OpenAPI, and invalid direction", () => {
