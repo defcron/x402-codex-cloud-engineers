@@ -52,6 +52,33 @@ test("catches wrong coordinate size, unsupported curve, and incompatible algorit
   assert.ok(unsupported.issues.some((item) => item.code === "unsupported_curve"));
 });
 
+test("treats inherited algorithm and curve names as unsupported input", () => {
+  const result = preflightJwks(jwks([{ kty: "__proto__", alg: "HS256", evil: "value" }]));
+  assert.ok(result.issues.some((item) => item.code === "unsupported_public_key_type"));
+  assert.ok(result.issues.some((item) => item.code === "alg_incompatible_with_kty"));
+  assert.ok(result.issues.some((item) => item.code === "unsupported_member"));
+  const unsupportedCurve = preflightJwks(jwks([ec({ crv: "constructor" })]));
+  assert.ok(unsupportedCurve.issues.some((item) => item.code === "unsupported_curve"));
+});
+
+test("flags signature/encryption metadata conflicts", () => {
+  const result = preflightJwks(jwks([{ kty: "RSA", n: "AQ", e: "AQAB", alg: "RS256", use: "enc" }]));
+  assert.ok(result.issues.some((item) => item.code === "use_incompatible_with_alg"));
+  const keyOps = preflightJwks(jwks([ec({ key_ops: ["verify", "encrypt", "verify"] })]));
+  assert.ok(keyOps.issues.some((item) => item.code === "duplicate_key_operation"));
+  assert.ok(keyOps.issues.some((item) => item.code === "key_ops_incompatible_with_use"));
+});
+
+test("escapes and bounds unknown member paths, and caps issue output", () => {
+  const key = ec({ "bad/name~key": "omitted" });
+  for (let i = 0; i < 500; i++) key[`extra-${i}`] = true;
+  const result = preflightJwks(jwks([key]));
+  assert.ok(result.issues.some((item) => item.path === "/keys/0/bad~1name~0key"));
+  assert.equal(result.issues.length, 100);
+  assert.equal(result.issues.at(-1).code, "additional_issues_truncated");
+  assert.equal(JSON.stringify(result).includes("omitted"), false);
+});
+
 test("handles malformed JSON, wrong top-level shape, and empty key sets", () => {
   assert.equal(preflightJwks("{").issues[0].code, "invalid_json");
   assert.equal(preflightJwks("[]").issues[0].code, "jwks_must_be_object");
