@@ -38,7 +38,7 @@ Expected essentials:
 
 - HTTP JSON body: at most 524,288 bytes. OpenAPI JSON within it: at most 262,144 characters, 1,000 paths, 2,000 operations, 30,000 JSON nodes, and depth 64.
 - Unknown fields at the request body, request object, selector, and query/header pair levels are rejected.\n- Request path: at most 2,048 characters. Query/header pairs: at most 64 each. Selector rules: 1–32. Names/values have explicit per-field caps enforced in the source.
-- Empty/malformed or unsupported documents, invalid methods, malformed path templates, unsupported selectors, CR/LF in header inputs, and invalid request shapes return RoutingInspectorError (400); bounded-size violations return status 413.
+- Empty/malformed or unsupported documents, invalid methods, malformed path templates, unsupported selectors, CR/LF in header inputs, unknown fields, and invalid request shapes return RoutingInspectorError (400); bounded-size violations return status 413. The Worker adapter also returns 405 for non-POST, 415 for non-JSON, and a generic 500 for unexpected failures.
 - Path matching is segment-wise and does not percent-decode, fetch server URLs, resolve references, or execute document content. Static exact path wins over templates; multiple matching templates are reported ambiguous.
 - Version resolution only applies caller rules. It does not infer conventional version names or parse Accept media types. It does not include auth middleware; integrations must not echo/store captured credentials.
 
