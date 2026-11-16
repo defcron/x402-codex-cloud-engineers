@@ -18,6 +18,26 @@ test("returns review for an ordinary public-looking URL without claiming it is s
   assert.equal(result.normalized_url, "https://example.com/");
 });
 
+test("canonicalizes IDNs and blocks alternate numeric IPv4 plus reserved local names", () => {
+  const idn = safeUrlPreflight("https://bücher.com/path");
+  assert.equal(idn.ok, true);
+  assert.equal(idn.normalized_url, "https://xn--bcher-kva.com/path");
+  assert.equal(idn.verdict, "review");
+  for (const url of ["http://0x7f000001/", "http://0177.0.0.1/", "https://service.example/"]) {
+    assert.equal(safeUrlPreflight(url).verdict, "block", url);
+  }
+});
+
+test("flags HTTP and non-default ports for review while preserving normalized URL", () => {
+  const http = safeUrlPreflight("http://example.com/path");
+  assert.equal(http.verdict, "review");
+  assert.deepEqual(http.findings, ["unencrypted_http"]);
+  const port = safeUrlPreflight("https://example.com:8443/path");
+  assert.equal(port.verdict, "review");
+  assert.equal(port.normalized_url, "https://example.com:8443/path");
+  assert.deepEqual(port.findings, ["non_default_port"]);
+});
+
 test("blocks loopback and private IPv4 literals including WHATWG short-form aliases", () => {
   for (const url of ["http://127.0.0.1/", "http://127.1/", "http://10.4.5.6/", "http://169.254.169.254/", "http://0.12.34.56/"]) {
     const result = safeUrlPreflight(url);
@@ -42,6 +62,8 @@ test("rejects empty, malformed, whitespace, backslash, non-string and oversized 
   assert.deepEqual(safeUrlPreflight(""), { ok: false, error: "url_required" });
   assert.deepEqual(safeUrlPreflight("example.com"), { ok: false, error: "url_invalid_or_not_absolute" });
   assert.deepEqual(safeUrlPreflight("https://example.com/a b"), { ok: false, error: "url_contains_whitespace_or_control" });
+  assert.deepEqual(safeUrlPreflight("https://example.com/ path"), { ok: false, error: "url_contains_whitespace_or_control" });
+  assert.deepEqual(safeUrlPreflight("https://example.com/\u200bpath"), { ok: false, error: "url_contains_whitespace_or_control" });
   assert.deepEqual(safeUrlPreflight("https://example.com\\@127.0.0.1"), { ok: false, error: "url_contains_backslash" });
   assert.deepEqual(safeUrlPreflight(null), { ok: false, error: "url_must_be_a_string" });
   const maximumLengthUrl = `https://example.com/${"a".repeat(SAFE_URL_PREFLIGHT_MAX_LENGTH - "https://example.com/".length)}`;

@@ -18,9 +18,9 @@ safeUrlPreflight("https://Example.COM:443/a/../b?q=1#section")
 // }
 ```
 
-Recognizable localhost names, local/private/reserved IP literals, unsupported schemes, userinfo, backslashes, whitespace/control characters, malformed URLs, and oversized input are blocked or rejected. Plain HTTP and non-default ports are findings that require caller review. A caller that later fetches must independently resolve and validate every address, defend against DNS rebinding, disable or revalidate redirects, and enforce connection timeouts and response-size limits.
+Recognizable localhost names, local/private/reserved IP literals, special-use DNS suffixes, unsupported schemes, userinfo, backslashes, Unicode or ASCII whitespace/control/format characters, malformed URLs, and oversized input are blocked or rejected. Plain HTTP and non-default ports are findings that require caller review. A caller that later fetches must independently resolve and validate every address, defend against DNS rebinding, disable or revalidate redirects, and enforce connection timeouts and response-size limits.
 
-The live Agent Evidence Utility has URL query parse/serialize operations but no full-URL static preflight in OpenAPI v0.8.206. PayAPI already lists fetch-oriented SSRF defenses (Safe web reader, CrawlSafe), URL status checks, and a robots preflight. This work is narrower: canonicalization and static linting without a fetch. Its distinct value is therefore limited to callers composing other fetch services; it must not be marketed as an SSRF defense by itself.
+The live Agent Evidence Utility has URL query parse/serialize operations but no full-URL static preflight in OpenAPI v0.8.207. Engineer 32's reserved URI-template conformance check handles templates and expansion inputs, which is a different task. PayAPI already lists fetch-oriented SSRF defenses (Safe web reader, CrawlSafe), URL status checks, and a robots preflight. This work is narrower: canonicalization and static linting without a fetch. Its distinct value is therefore limited to callers composing other fetch services; it must not be marketed as an SSRF defense by itself.
 
 ## Focused checks
 
@@ -30,7 +30,7 @@ Run with Node.js 20 or later:
 node --test workstreams/safe-url-preflight.test.mjs
 ```
 
-Expected coverage: canonicalization; public-looking review result; loopback/private and short-form IPv4 blocking; local names and IPv6; credentials and unsupported schemes; empty, malformed, whitespace/backslash, non-string, and length boundary inputs.
+Expected coverage: canonicalization and IDNA; public-looking review result; loopback/private and alternate-form IPv4 blocking; local names and IPv6; credentials and unsupported schemes; HTTP/port review findings; empty, malformed, Unicode whitespace/format, backslash, non-string, and length boundary inputs.
 
 ## Integration boundary
 

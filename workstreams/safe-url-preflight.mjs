@@ -92,6 +92,7 @@ function hostnameFinding(hostname) {
   if (host === "localhost" || host.endsWith(".localhost")) return "localhost_name";
   if (host.endsWith(".local") || host.endsWith(".internal") || host === "internal") return "private_or_local_name";
   if (host.endsWith(".home.arpa")) return "home_network_name";
+  if ([".test", ".invalid", ".example", ".onion"].some((suffix) => host.endsWith(suffix))) return "reserved_or_special_name";
   if (!host.includes(".")) return "single_label_hostname";
   return null;
 }
@@ -108,7 +109,7 @@ export function safeUrlPreflight(input) {
   if (typeof input !== "string") return { ok: false, error: "url_must_be_a_string" };
   if (input.length === 0) return { ok: false, error: "url_required" };
   if (input.length > MAX_URL_LENGTH) return { ok: false, error: "url_too_long" };
-  if (/[\u0000-\u0020\u007f]/u.test(input)) return { ok: false, error: "url_contains_whitespace_or_control" };
+  if (/[\p{White_Space}\p{Cc}\p{Cf}]/u.test(input)) return { ok: false, error: "url_contains_whitespace_or_control" };
   if (input.includes("\\")) return { ok: false, error: "url_contains_backslash" };
 
   let parsed;
