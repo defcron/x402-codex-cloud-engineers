@@ -22,9 +22,9 @@ For `offset`, provide `request_offset` (first page must be 0), `limit` (1–100)
 
 ## Output and checks
 
-The response contains `ok`, `mode`, `pages_checked`, `unique_item_ids`, `findings`, and a scope note. Findings include page numbers and stable issue codes; item IDs and continuation tokens are never returned. Checks cover non-advancing or mismatched continuation, unexpected terminal continuation, empty intermediate pages, item IDs repeated across pages, page-size overflow, and inconsistent totals. A trace ending while `has_more` is true is marked `trace_incomplete`, not passed.
+The response contains `ok`, `mode`, `pages_checked`, `unique_item_ids`, `findings`, and a scope note. Findings include page numbers and stable issue codes; item IDs and continuation tokens are never returned. Checks cover non-advancing or mismatched continuation, unexpected terminal continuation, pages after a terminal page, empty intermediate pages, item IDs repeated across pages, page-size overflow, and inconsistent totals. A trace ending while `has_more` is true is marked `trace_incomplete`, not passed.
 
-Malformed data returns `ContractInputError`. Limits: 1–10 pages, at most 100 item IDs per page / 1,000 per trace, 256 characters per ID, and 512 characters per cursor. The future HTTP wrapper should also cap the serialized request at 64 KiB and return a 4xx for malformed input; no such wrapper is included in this isolated prototype.
+Malformed data returns `ContractInputError`. Limits: 1–10 pages, at most 100 item IDs per page / 1,000 per trace, 256 characters per ID, and 512 characters per cursor. The bounded UTF-8 JSON parser enforces the 64 KiB serialized request cap before decoding. A future HTTP wrapper should map malformed input to a 4xx; no HTTP wrapper is included in this isolated prototype.
 
 ## Example run
 
