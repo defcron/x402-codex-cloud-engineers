@@ -44,8 +44,8 @@ Main ledger key for #28 is api-version-routing-inspector. #29 owns openapi-opera
 
 ## Worker integration handoff
 
-See manifest.json. The manifest proposes POST /v1/api-version-routing-inspector at $0.005 per request and zero runtime model/API calls. A central integrator must register inspectApiVersionRouting with the existing Worker router and x402 payment middleware, add the request/response schema and example to the live OpenAPI/docs, and confirm the live challenge price/network/asset/payTo. This branch has no production route registration, deployment target, or quota slot.
+See manifest.json. The manifest proposes POST /v1/api-version-routing-inspector at $0.005 per request and zero runtime model/API calls. worker-handler.mjs provides bounded JSON HTTP handling but no payment logic. A central integrator must register handleApiVersionRoutingRequest through the existing Worker router and existing x402 payment middleware, add the request/response schema and example to live OpenAPI/docs, and confirm the live challenge price/network/asset/payTo. This branch has no production route registration, deployment target, or quota slot.
 
 Focused tests:
 
-    node --test workstreams/engineer-28-api-version-routing-inspector/inspect.test.mjs
+    node --test workstreams/engineer-28-api-version-routing-inspector/inspect.test.mjs workstreams/engineer-28-api-version-routing-inspector/worker-handler.test.mjs
