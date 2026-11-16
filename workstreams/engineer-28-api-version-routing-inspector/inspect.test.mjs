@@ -55,6 +55,11 @@ test("does not decode encoded slashes into multiple path segments", () => {
   assert.equal(result.route.status, "matched");
 });
 
+test("path-prefix selector uses a segment boundary", () => {
+  const result = inspect({ "/items": { get: {} } }, request("GET", "/v10/items"), [selector("path_prefix", { value: "/v1" })]);
+  assert.equal(result.selector.status, "unmatched");
+});
+
 test("does not treat Accept media types as version selectors", () => {
   const result = inspect({ "/items": { get: {} } }, request("GET", "/items", { headers: [{ name: "Accept", value: "application/vnd.shop.v2+json" }] }), [
     selector("header", { name: "x-api-version", value: "2" })
@@ -77,6 +82,11 @@ test("enforces selector, pair, path, document-depth, and size bounds", () => {
   assert.throws(() => inspect({ "/items": { get: {} } }, request("GET", "/items", { query: Array.from({ length: 65 }, (_, i) => ({ name: "x" + i, value: "a" })) })), /64 entries/);
   assert.throws(() => inspect({ "/items": { get: {} } }, request("GET", "/" + "a".repeat(2048))), /2048 characters/);
   assert.throws(() => inspectApiVersionRouting({ openapi_json: " ".repeat(262145), request: request(), selectors: [one] }), /262144 characters/);
+  const tooManyPaths = Object.fromEntries(Array.from({ length: 1001 }, (_, i) => ["/p" + i, { get: {} }]));
+  assert.throws(() => inspect(tooManyPaths), /1000 paths/);
+  const methods = ["get", "put", "post", "delete", "options", "head", "patch", "trace"];
+  const tooManyOperations = Object.fromEntries(Array.from({ length: 251 }, (_, i) => ["/p" + i, Object.fromEntries(methods.map(method => [method, {}]))]));
+  assert.throws(() => inspect(tooManyOperations), /2000 operations/);
   const deep = { openapi: "3.1.0", info: {}, paths: {} }; let cursor = deep;
   for (let i = 0; i < 66; i++) cursor = cursor.next = {};
   assert.throws(() => inspectApiVersionRouting({ openapi_json: JSON.stringify(deep), request: request(), selectors: [one] }), /depth 64/);
