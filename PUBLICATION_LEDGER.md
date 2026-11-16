@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 05:15 UTC
+Last reconciled: 2026-11-16 05:20 UTC
 Owner: CTO / central production integrator
 
 
@@ -26,7 +26,7 @@ Check the live OpenAPI document immediately before reserving a feature and again
 
 ## Engineer reservation roster
 
-Last roster snapshot (2026-11-16 04:54 UTC): 94 unarchived Codex Cloud threads titled `x402 Cloud Engineer NN` across 50 engineer numbers. A coordination message was successfully sent to one newest thread per assignment (50 sends); 22 were active and 28 idle at the post-send snapshot. Forty-four engineer numbers have duplicate chats and six have one. The canonical assignment roster remains 50 unique service keys; duplicate chat count does not create extra assignments or quota. The prompt directs already-integrated owners not to duplicate work, asks pending owners for an isolated GitHub patch with evidence, and prohibits deployment/PayAPI submission pending CTO review and quota reconciliation. A separate writable-workspace pilot found the x402 environment runnable but both `/tmp` and repository mount read-only. The following are exclusive CTO-issued candidate keys. These are design/build reservations only: **no deployment target or PayAPI quota slot is allocated**. Before production integration, the owner must recheck behavior against the live OpenAPI catalog and resolve any genuine overlap.
+Last roster snapshot (2026-11-16 05:20 UTC): 100 unarchived Codex Cloud threads titled `x402 Cloud Engineer NN` across all 50 engineer numbers, with exactly two chat threads per assignment. At the prior 04:54 UTC coordination round, one newest thread per assignment received a message (50 sends); the current count includes both chats for each key. Current active/idle status was not counted in this inventory. The canonical assignment roster remains 50 unique service keys; duplicate chat count does not create extra assignments or quota. The prompt directs already-integrated owners not to duplicate work, asks pending owners for an isolated GitHub patch with evidence, and prohibits deployment/PayAPI submission pending CTO review and quota reconciliation. A separate writable-workspace pilot found the x402 environment runnable but both `/tmp` and repository mount read-only. The following are exclusive CTO-issued candidate keys. These are design/build reservations only: **no deployment target or PayAPI quota slot is allocated**. Before production integration, the owner must recheck behavior against the live OpenAPI catalog and resolve any genuine overlap.
 
 | Engineer | Exclusive service key / customer job | State and next action |
 |---|---|---|
