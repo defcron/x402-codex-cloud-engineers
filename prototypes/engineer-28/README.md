@@ -5,7 +5,7 @@ A deterministic, standalone prototype for comparing complete OpenAPI 3.0/3.1 JSO
 ## Contract
 
 - Inputs: beforeJson and afterJson strings containing OpenAPI 3.0 or 3.1 JSON; optional direction is backward, forward, or both.
-- Output: operation counts and a sorted matrix. Each finding includes the operation key, change, backward and forward impact, and explanation. Findings are capped at 200 and expose truncated.
+- Output: operation counts and a sorted matrix. Each finding includes the operation key, change, and explanation. Direction both includes backward and forward impacts; selecting one direction also adds impact for that direction. Findings are capped at 200 and expose truncated.
 - Direction: backward means an older client using the old contract against the newer API; forward means a newer client contract against the older API.
 - Checks: operation additions/removals, newly required operation parameters or request bodies, required request properties, inline parameter/body schema type or enum changes, removed response statuses, removed inline response properties, and unresolved schema references.
 - Bounds: each document at most 131,072 characters, 500 paths, 1,000 operations, 20,000 JSON nodes, and depth 64.
