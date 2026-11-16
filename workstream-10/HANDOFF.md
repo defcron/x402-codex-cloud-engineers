@@ -8,7 +8,7 @@ The live Worker OpenAPI/llms catalog and PayAPI searches were checked earlier in
 
 ## Artifact
 
-The isolated source artifact is committed as `3d06a81` on branch `engineer-10/jwks-rotation-cache-policy`, based on current engineer-repository main `0ded06c`.
+The initial isolated source artifact is commit `3d06a81`; the correctness refinement is commit `5d9c134` on branch `engineer-10/jwks-rotation-cache-policy`, based on current engineer-repository main `0ded06c`.
 
 The branch is pushed and available for review in [draft PR #5](https://github.com/defcron/x402-codex-cloud-engineers/pull/5). It is mergeable; it does not modify or deploy the production Worker.
 
@@ -34,7 +34,7 @@ node --check workstream-10/validator.mjs
 node --check workstream-10/validator.test.mjs
 ```
 
-Expected example: `ok:true`; 4 snapshots; one old key removed and one new key added; 1,200 seconds sampled overlap against a derived 1,020-second requirement; no findings.
+Latest checks: 6 tests pass. Expected example: `ok:true`; 4 snapshots; one old key removed and one new key added; 1,200 seconds sampled overlap against a derived 1,020-second requirement; no findings. Additional cases cover no replacement keys, `s-maxage` precedence, and non-contiguous co-presence samples.
 
 ## Central integration gates
 
