@@ -1,0 +1,14 @@
+{
+  "policy": {
+    "max_age_seconds": 300,
+    "max_stale_seconds": 60,
+    "maximum_token_lifetime_seconds": 600,
+    "safety_margin_seconds": 60
+  },
+  "snapshots": [
+    {"observed_at":"2026-01-01T00:00:00Z","age_seconds":0,"cache_control":"public, max-age=300, stale-while-revalidate=30","jwks":{"keys":[{"kid":"key-old","kty":"RSA","use":"sig"}]}},
+    {"observed_at":"2026-01-01T00:05:00Z","age_seconds":0,"cache_control":"public, max-age=300, stale-while-revalidate=30","jwks":{"keys":[{"kid":"key-old","kty":"RSA","use":"sig"},{"kid":"key-new","kty":"RSA","use":"sig"}]}},
+    {"observed_at":"2026-01-01T00:25:00Z","age_seconds":0,"cache_control":"public, max-age=300, stale-while-revalidate=30","jwks":{"keys":[{"kid":"key-old","kty":"RSA","use":"sig"},{"kid":"key-new","kty":"RSA","use":"sig"}]}},
+    {"observed_at":"2026-01-01T00:30:00Z","age_seconds":0,"cache_control":"public, max-age=300, stale-while-revalidate=30","jwks":{"keys":[{"kid":"key-new","kty":"RSA","use":"sig"}]}}
+  ]
+}
