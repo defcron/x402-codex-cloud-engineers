@@ -1,8 +1,12 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 05:23 UTC
+Last reconciled: 2026-11-16 05:31 UTC
 Owner: CTO / central production integrator
 
+
+## Central release and accounting update (2026-11-16 05:31 UTC)
+
+- PR #15 (bounded Unicode text normalization utility) was merged as `ea91967e7f7b306e57badb3f886eecf745a48451`. The full local suite passed 464/464; build, Wrangler dry-run, and diff check passed. This updates source on main only; release 0.8.216 remains deployed and no PayAPI listing or paid request was made for the candidate. The release observation window remains open through approximately 2026-11-17 01:46 UTC, so this non-safety route is not deployed yet. The current public OpenAPI request from the coordinator returned HTTP 403, so live route presence was not reverified in this update.
 
 ## Central release and accounting update (2026-11-16 05:10 UTC)
 
@@ -30,7 +34,7 @@ Last roster snapshot (2026-11-16 05:20 UTC): 100 unarchived Codex Cloud threads 
 
 | Engineer | Exclusive service key / customer job | State and next action |
 |---|---|---|
-| 01 | `agent-text-normalization` — normalize Unicode/whitespace for agent text pipelines | Assigned; build/test artifact in isolated branch; no quota reserved |
+| 01 | `agent-text-normalization` — normalize Unicode/whitespace for agent text pipelines | PR #15 merged as `ea91967e7f7b306e57badb3f886eecf745a48451`; local suite 464/464, build and Wrangler dry-run passed. Source is on `main` but not deployed; no PayAPI submission or quota slot. Deployment remains held by the 24-hour observation window through approximately 2026-11-17 01:46 UTC. |
 | 02 | `http-cache-control-ttl-audit` — assess caller-supplied cache directives and effective freshness | Assigned; no quota reserved |
 | 03 | `safe-url-preflight` — static HTTP(S) URL canonicalization and SSRF-risk syntax lint | Tested local artifact reported; transfer complete patch and 5 tests to CTO; not deployed |
 | 04 | `html-table-schema-conformance` — compare extracted table headers/row shape to a caller contract | Integrated in release `0.8.210` (commit `b7718ce`); full suite 402/402 passed, build and Wrangler dry-run passed. Live OpenAPI/example HTTP 200 and unpaid route HTTP 402 at `$0.005` on Base; current Worker release `0.8.215` continues to include the route; latest Cloudflare version `6ade30ab-858f-4f25-8747-d9c153a75ef6`. PayAPI listing `df465399-c08e-4bf0-b38f-df5549c3927c` submitted 2026-11-16 04:02 UTC; `pending_review`, not verified or revenue. PR #4 closed after integration. |
