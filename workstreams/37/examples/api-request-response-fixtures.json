@@ -1,0 +1,9 @@
+{
+  "method":"POST","path":"/orders/{orderId}",
+  "operation":{
+    "parameters":[{"name":"orderId","in":"path","required":true,"schema":{"type":"string","example":"ord_demo"}}],
+    "requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["sku","quantity"],"properties":{"sku":{"type":"string","example":"SKU-42"},"quantity":{"type":"integer","minimum":1}}}}}},
+    "responses":{"201":{"description":"Created","content":{"application/json":{"schema":{"type":"object","required":["id"],"properties":{"id":{"type":"string","example":"order_demo"}}}}}}}
+  },
+  "examples":[{"name":"known-order","request":{"path":{"orderId":"ord_42"},"body":{"sku":"SKU-42","quantity":3}},"response":{"status":"201","body":{"id":"order_42"}}}]
+}
