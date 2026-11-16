@@ -84,5 +84,5 @@ test("enforces selector, pair, path, document-depth, and size bounds", () => {
 
 test("rejects malformed selector sources and request header newlines", () => {
   assert.throws(() => inspect({ "/items": { get: {} } }, request(), [{ source: "accept", version: "2", name: "Accept", value: "x" }]), /unsupported source/);
-  assert.throws(() => inspect({ "/items": { get: {} } }, request("GET", "/items", { headers: [{ name: "X-Test", value: "ok\\r\\ninjected: yes" }] })), /CR or LF/);
+  assert.throws(() => inspect({ "/items": { get: {} } }, request("GET", "/items", { headers: [{ name: "X-Test", value: "ok" + String.fromCharCode(13, 10) + "injected: yes" }] })), /CR or LF/);
 });
