@@ -51,5 +51,22 @@ class ContractTests(unittest.TestCase):
             check_paths({"data": deep, "pointers": []})
 
 
+    def test_exact_supported_limits(self):
+        long_key = "k" * 1023
+        result = check_paths({"data": {long_key: 0},
+                              "pointers": ["/" + long_key]})["results"][0]
+        self.assertEqual((result["exists"], result["type"]), (True, "number"))
+        self.assertEqual(len(check_paths({"data": None, "pointers": [""] * 100})["results"]), 100)
+        deep = None
+        pointer = ""
+        for _ in range(64):
+            deep = [deep]
+            pointer += "/0"
+        result = check_paths({"data": deep, "pointers": [pointer]})["results"][0]
+        self.assertEqual((result["exists"], result["type"]), (True, "null"))
+        self.assertEqual(len(check_paths({"data": [None] * 9999, "pointers": []})["results"]), 0)
+        result = check_paths({"data": "x" * 1_048_574, "pointers": [""]})["results"][0]
+        self.assertEqual((result["exists"], result["type"]), (True, "string"))
+
 if __name__ == "__main__":
     unittest.main()
