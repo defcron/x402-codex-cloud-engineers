@@ -68,11 +68,37 @@
       }
     }
   },
-  "outputs": {
-    "selector.status": ["unmatched", "selected", "ambiguous"],
-    "route.status": ["matched", "not_found", "method_not_allowed", "ambiguous"],
+  "response_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["openapi_version", "api_version", "path_count", "operation_count", "selector", "route"],
+    "properties": {
+      "openapi_version": { "type": "string" },
+      "api_version": { "type": ["string", "null"], "description": "OpenAPI info.version metadata; this is not the selected routing version." },
+      "path_count": { "type": "integer" },
+      "operation_count": { "type": "integer" },
+      "selector": {
+        "type": "object",
+        "required": ["status", "selected_version", "matches"],
+        "properties": {
+          "status": { "enum": ["unmatched", "selected", "ambiguous"] },
+          "selected_version": { "type": ["string", "null"] },
+          "matches": { "type": "array", "items": { "type": "object", "required": ["source", "version"], "properties": { "source": { "enum": ["path_prefix", "query", "header"] }, "version": { "type": "string" }, "name": { "type": "string" } } } }
+        }
+      },
+      "route": {
+        "type": "object",
+        "required": ["status", "matched_operation", "allowed_methods"],
+        "properties": {
+          "status": { "enum": ["matched", "not_found", "method_not_allowed", "ambiguous"] },
+          "matched_operation": { "type": ["object", "null"], "properties": { "method": { "type": "string" }, "path": { "type": "string" }, "operation_id": { "type": ["string", "null"] }, "summary": { "type": ["string", "null"] } } },
+          "allowed_methods": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "output_notes": {
     "route.allowed_methods": "Sorted methods when a matching path lacks the requested method.",
-    "route.matched_operation": "Method, OpenAPI path template, operationId, and summary; null when no unique operation is selected.",
     "privacy": "Raw request query/header values are not returned."
   },
   "errors": {
