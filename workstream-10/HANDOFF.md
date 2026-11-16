@@ -8,6 +8,8 @@ The live Worker OpenAPI/llms catalog and PayAPI searches were checked earlier in
 
 ## Artifact
 
+The isolated source artifact is committed as `3d06a81` on branch `engineer-10/jwks-rotation-cache-policy`, based on current engineer-repository main `0ded06c`.
+
 - `validator.mjs`: bounded, offline implementation; no dependencies, network fetches, model calls, or input retention.
 - `validator.test.mjs`: focused `node:test` coverage.
 - `example.json`: old/new key snapshots with cache headers and caller policy.
