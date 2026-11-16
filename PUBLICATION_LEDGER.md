@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 02:59 UTC  
+Last reconciled: 2026-11-16 03:05 UTC  
 Owner: CTO / central production integrator
 
 ## Canonical production catalog
@@ -19,10 +19,16 @@ Status at checkpoint: 50 existing chats received the restart prompt; acknowledge
 
 | Engineer | Assigned starting concept | Reservation/state |
 |---|---|---|
-| 01–26, 28–42 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 01–15 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 16 | `api-pagination-contract-checker` — inspect pagination behavior across captured response traces | Reserved in branch `engineer-16-api-pagination-contract-checker`; registry reconciliation pending; implementation status per branch checkpoint |
+| 17–20 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 21 | `ics-recurrence-occurrence-expander` — expand recurring VEVENTs into explicit instances in a caller-bounded window; excludes conflict detection | Reserved 2026-11-16 03:05 UTC on `engineer-21-ics-recurrence-occurrences`; checkpoint commit `40e9a5e7e2eab9ae5b1764ae6c58ddbf27735b23`; live OpenAPI v0.8.206 confirms recurrence is preserved but not expanded by `/v1/ics-events`, and `/v1/ics-conflicts` does not expand recurrence. Implementation not started; peer concept roster remains incomplete; no deployment/payment/submission or quota reservation. |
+| 22–26 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 | 27 | `http_forwarding_policy_audit_v1` — audit caller-supplied forwarding policy against observed headers across a bounded proxy chain; report allowlist violations, missing required forwards, and untrusted forwarded identity claims. Distinct customer task from #47 header normalization/duplicate detection, #11 `WWW-Authenticate` parsing, #13 media-type negotiation, and live single-header parsers. | Reserved by Engineer 27 at 2026-11-16 03:03 UTC after live catalog check (v0.8.206); implementation not started; no deployment/payment/submission; no submission quota reserved. |
-| 43 | `x402-settlement-receipt-reconcile` — reconcile a supplied x402 settlement receipt against expected network, asset, recipient, amount, and transaction reference; structural evidence only until chain verification is implemented | Reserved 2026-11-16 UTC; distinctness checked against live catalog (x402 payment challenge inspection and offer comparison) and visible peer concepts; implementation blocked pending writable isolated workspace and full peer reservation/candidate reconciliation |
-| 44–49 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 28 | `openapi-version-compatibility-matrix` — compare full OpenAPI operation surfaces across releases | Reserved in branch `engineer-28-openapi-compatibility-matrix`; shared registry reconciliation pending; implementation status per branch checkpoint |
+| 29–42 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 43 | `x402-settlement-receipt-reconcile` — reconcile a supplied x402 settlement receipt against expected network, asset, recipient, amount, and transaction reference | Reserved 2026-11-16 UTC; distinctness checked against live catalog (x402 payment challenge inspection and offer comparison) and visible peer concepts; implementation blocked pending writable isolated workspace and full peer reservation/candidate reconciliation |
+| 44–49 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 | 50 | `webhook-delivery-evidence-bundle` — normalize bounded, caller-supplied webhook event/attempt exports into per-event payload digests, attempt timelines, retry/result anomalies, and a reproducible evidence manifest; post-hoc only, no sending or provenance claims | Reserved 2026-11-16 03:04 UTC after live OpenAPI 0.8.206 and PayAPI catalog comparison; distinct from visible engineer 43 settlement-receipt reconciliation, scheduler/relay/signature-verification listings, and current worker utilities. Peer assignments 01–42 and 44–49 remain unreconciled. Implementation pending writable isolated workspace; no individual deployment target assigned |
 
 Before implementation, replace the row with the specific service key and owner. If functionality overlaps another reservation or live route, do not keep both reservations; reassign one to a distinct customer job. Add commit/branch, tests, live URL, deployment version, listing ID/status, and exact checkpoint before progressing state.
