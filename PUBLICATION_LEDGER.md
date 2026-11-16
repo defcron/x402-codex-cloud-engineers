@@ -19,7 +19,8 @@ Status at checkpoint: 50 existing chats received the restart prompt; acknowledge
 
 | Engineer | Assigned starting concept | Reservation/state |
 |---|---|---|
-| 01–42 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 01–26, 28–42 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 27 | `http_forwarding_policy_audit_v1` — audit caller-supplied forwarding policy against observed headers across a bounded proxy chain; report allowlist violations, missing required forwards, and untrusted forwarded identity claims. Distinct customer task from #47 header normalization/duplicate detection, #11 `WWW-Authenticate` parsing, #13 media-type negotiation, and live single-header parsers. | Reserved by Engineer 27 at 2026-11-16 03:03 UTC after live catalog check (v0.8.206); implementation not started; no deployment/payment/submission; no submission quota reserved. |
 | 43 | `x402-settlement-receipt-reconcile` — reconcile a supplied x402 settlement receipt against expected network, asset, recipient, amount, and transaction reference; structural evidence only until chain verification is implemented | Reserved 2026-11-16 UTC; distinctness checked against live catalog (x402 payment challenge inspection and offer comparison) and visible peer concepts; implementation blocked pending writable isolated workspace and full peer reservation/candidate reconciliation |
 | 44–50 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 
