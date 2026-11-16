@@ -125,5 +125,15 @@ function assess(before, after, direction = "both") {
 }
 
 export function compareOpenApiVersions(beforeJson, afterJson, options = {}) {
-  return assess(beforeJson, afterJson, options.direction ?? "both");
+  if (!options || typeof options !== "object" || Array.isArray(options)) throw new TypeError("options must be an object");
+  const direction = options.direction ?? "both";
+  const result = assess(beforeJson, afterJson, direction);
+  if (direction === "both") return result;
+  return {
+    ...result,
+    operations: result.operations.map(row => ({
+      ...row,
+      findings: row.findings.map(finding => ({ ...finding, impact: finding[direction] }))
+    }))
+  };
 }
