@@ -13,6 +13,9 @@ export class RoutingInspectorError extends Error {
 function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
+function onlyKeys(value, allowed, label) {
+  for (const key of Object.keys(value)) if (!allowed.has(key)) throw new RoutingInspectorError(label + " contains unsupported field " + key + ".");
+}
 function boundedString(value, label, max, allowEmpty = false) {
   if (typeof value !== "string") throw new RoutingInspectorError(label + " must be a string.");
   if (value.length > max) throw new RoutingInspectorError(label + " exceeds " + max + " characters.", 413);
@@ -70,6 +73,7 @@ function validatePairs(value, label, { header = false } = {}) {
   if (pairs.length > MAX_PAIRS) throw new RoutingInspectorError(label + " exceeds 64 entries.", 413);
   return pairs.map(pair => {
     if (!isRecord(pair)) throw new RoutingInspectorError(label + " entries must be objects.");
+    onlyKeys(pair, new Set(["name", "value"]), label + " entry");
     const name = boundedString(pair.name, label + " name", 128);
     const itemValue = boundedString(pair.value, label + " value", 1024, true);
     if (/[\r\n]/.test(name) || /[\r\n]/.test(itemValue)) throw new RoutingInspectorError(label + " cannot contain CR or LF.");
@@ -81,6 +85,8 @@ function validateSelectors(value) {
   if (value.length > MAX_SELECTORS) throw new RoutingInspectorError("selectors exceeds 32 entries.", 413);
   return value.map((selector, index) => {
     if (!isRecord(selector) || !SOURCES.has(selector.source)) throw new RoutingInspectorError("selectors[" + index + "] has an unsupported source.");
+    const allowed = selector.source === "path_prefix" ? new Set(["source", "version", "value"]) : new Set(["source", "version", "name", "value"]);
+    onlyKeys(selector, allowed, "selectors[" + index + "]");
     const version = boundedString(selector.version, "selector version", 64);
     if (selector.source === "path_prefix") {
       const prefix = boundedString(selector.value, "path_prefix value", 512);
@@ -123,8 +129,10 @@ function resolveRoute(paths, method, requestPath) {
 
 export function inspectApiVersionRouting(input) {
   if (!isRecord(input)) throw new RoutingInspectorError("Request body must be an object.");
+  onlyKeys(input, new Set(["openapi_json", "request", "selectors"]), "Request body");
   const { doc, paths, operationCount } = validateDocument(input.openapi_json);
   if (!isRecord(input.request)) throw new RoutingInspectorError("request must be an object.");
+  onlyKeys(input.request, new Set(["method", "path", "query", "headers"]), "request");
   const method = boundedString(input.request.method, "request.method", 16).toUpperCase();
   if (!METHODS.has(method.toLowerCase())) throw new RoutingInspectorError("request.method is not a supported HTTP method.");
   const path = boundedString(input.request.path, "request.path", 2048);
