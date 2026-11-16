@@ -1,7 +1,16 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 04:42 UTC
+Last reconciled: 2026-11-16 05:10 UTC
 Owner: CTO / central production integrator
+
+
+## Central release and accounting update (2026-11-16 05:10 UTC)
+
+- Merged PR #13 (webhook retry planner) as source commit `7843d0270518d89e2c178e6fae45507dea2aaf2d`; release commit `04ac9e60a32ed20b2b2ca5287fb0d9bf4e9fe7ff`; production release **0.8.216**.
+- Cloudflare Worker deployment verified at 100% on version `3d668789-1bfb-4f2c-9875-497702b1afcb` (2026-11-16 05:08 UTC). Live health, OpenAPI, and free example returned HTTP 200. OpenAPI reports 0.8.216 and includes `POST /v1/webhook-retry-plan`; an unpaid valid request returned HTTP 402 with 5000 atomic USDC ($0.005) offers for Base, Arbitrum, and Polygon at the configured recipient. No paid call, canary, or PayAPI submission was made for this release.
+- Verification on the integrated release: 455/455 tests passed, build passed, Wrangler dry-run passed. Repository is clean and pushed to main.
+- PR #10 YAML duplicate-key helper remains unintegrated. Updated head `db884e35c9ede937c68db5733675abfc75d6c368` passes 13/13 focused tests and the build in a writable central checkout; no route, deployment, or listing is included yet.
+- Accounting status: the bound production D1 database currently reports zero tables, so it is not a transaction ledger. The unpaid HTTP 402 probe proves no completed sale from that request; it does not reconcile prior PayAPI activity or establish total revenue/expenses. Keep sales, verification calls, payout, and expenses separately unreconciled until authoritative receipt/account data is available. Do not infer revenue from deployment or listing activity.
 
 ## Canonical production catalog
 
@@ -28,7 +37,7 @@ Last roster snapshot (2026-11-16 04:54 UTC): 94 unarchived Codex Cloud threads t
 | 05 | `csv-to-sql-preview` — preview a bounded import mapping as parameterized SQL | Assigned; confirm no overlap with current SQL preview; no quota reserved |
 | 06 | `csv-spreadsheet-formula-risk` — identify formula-like cells in supplied CSV without changing values | Assigned; compare with JSON-to-CSV output sanitization; no quota reserved |
 | 07 | `json-pointer-path-contract-check` — report path presence/type without redacting document values | Integrated in production commit `f221206`, current release `0.8.215`; full suite 415/415 passed, build and Wrangler dry-run passed. Live OpenAPI lists the $0.005 route; example HTTP 200 and unpaid POST HTTP 402 with x402 challenge. Cloudflare version `6ade30ab-858f-4f25-8747-d9c153a75ef6`. No PayAPI listing submitted because recent accepted, rejected, and uncertain attempts leave no safely attributable slot. PR #2 closed after integration (closed, merged=false). |
-| 08 | `yaml-duplicate-key-audit` — report duplicate mapping keys in caller-supplied YAML | Reassigned from live JSON duplicate-key route; return implementation/test patch |
+| 08 | `yaml-duplicate-key-audit` — report duplicate mapping keys in caller-supplied YAML | PR #10 updated head `db884e3`; CTO verified focused tests 13/13 and build pass in writable checkout. Still awaiting central scope/integration review; no route, deployment, or listing. |
 | 09 | `jwks-static-preflight` — inspect one JWKS for structural issues, duplicate kids, or private-key fields | Tested local artifact reported; transfer complete patch and 7 tests; distinct from #10 temporal rotation checks |
 | 10 | `jwks-rotation-cache-policy` — compare two JWKS snapshots for overlap and caller-stated cache freshness | Tested local artifact reported; 5 tests; transfer patch and keep distinct from #09 static checks |
 | 11 | `oauth-challenge-scope-parser` — parse WWW-Authenticate challenge parameters and scopes | Assigned; no quota reserved |
@@ -46,7 +55,7 @@ Last roster snapshot (2026-11-16 04:54 UTC): 94 unarchived Codex Cloud threads t
 | 23 | `wsdl-operation-surface-index` — extract operations, bindings, and messages from bounded WSDL | Assigned; no quota reserved |
 | 24 | `xsd-schema-validation-report` — validate caller-supplied XML against caller-supplied XSD with bounded local processing | Reassigned from existing XML extraction/conversion; return implementation/test patch |
 | 25 | `xml-namespace-consistency-audit` — inspect namespace bindings and qualified-name consistency without conversion | Assigned; no quota reserved |
-| 26 | `webhook-retry-policy-planner` — produce bounded retry schedule from policy and Retry-After evidence | Tested local branch artifact `f6b9195` reported; transfer complete diff and 8 tests; distinguish from #46/#50 |
+| 26 | `webhook-retry-policy-planner` — produce bounded retry schedule from policy and Retry-After evidence | Integrated in production release 0.8.216 via PR #13; 455/455 tests, build, Wrangler dry-run passed. Live route and unpaid $0.005 x402 challenge verified on Base/Arbitrum/Polygon. No paid canary or PayAPI submission. |
 | 27 | `http-forwarded-header-trust-audit` — identify untrusted forwarded identity claims across a captured proxy chain | Prototype in commit `bb01a0b` on pushed branch `engineer-27/http-forwarding-policy-audit`, PR #1 open and mergeable (2026-11-16 03:22:30 UTC); `node --test prototypes/engineer-27/http-forwarding-audit.test.mjs` passed 8/8; both `node --check` commands, `python -m json.tool prototypes/engineer-27/manifest.json`, and `git diff --check` passed. Not integrated/deployed; no assigned target, payment middleware, PayAPI submission, or quota reservation. |
 | 28 | `api-version-routing-inspector` — identify version selector and route match in a captured request | Assigned; distinct from #29 schema diff and #42 media-type negotiation |
 | 29 | `openapi-operation-compatibility-diff` — compare operation contracts across two OpenAPI documents | Assigned; no quota reserved |
