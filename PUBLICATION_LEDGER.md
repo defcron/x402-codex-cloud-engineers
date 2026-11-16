@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 05:20 UTC
+Last reconciled: 2026-11-16 05:23 UTC
 Owner: CTO / central production integrator
 
 
@@ -10,7 +10,7 @@ Owner: CTO / central production integrator
 - Cloudflare Worker deployment verified at 100% on version `3d668789-1bfb-4f2c-9875-497702b1afcb` (2026-11-16 05:08 UTC). Live health, OpenAPI, and free example returned HTTP 200. OpenAPI reports 0.8.216 and includes `POST /v1/webhook-retry-plan`; an unpaid valid request returned HTTP 402 with 5000 atomic USDC ($0.005) offers for Base, Arbitrum, and Polygon at the configured recipient. No paid call, canary, or PayAPI submission was made for this release.
 - Verification on the integrated release: 455/455 tests passed, build passed, Wrangler dry-run passed. Repository is clean and pushed to main.
 - PR #10 YAML duplicate-key helper remains unintegrated. Updated head `db884e35c9ede937c68db5733675abfc75d6c368` passes 13/13 focused tests and the build in a writable central checkout; no route, deployment, or listing is included yet.
-- Accounting status: the bound production D1 database currently reports zero tables, so it is not a transaction ledger. The unpaid HTTP 402 probe proves no completed sale from that request; it does not reconcile prior PayAPI activity or establish total revenue/expenses. Keep sales, verification calls, payout, and expenses separately unreconciled until authoritative receipt/account data is available. Do not infer revenue from deployment or listing activity.
+- Accounting status: the bound production D1 database currently reports zero tables, so it is not a transaction ledger. Cloudflare Analytics Engine's funnel query for the last 30 days returned five POST /v1 HTTP 2xx `paid_response` events across five routes, all classified `other_or_unknown`; the last 24 hours returned zero. These are successful paid-gated route responses, not settlement or payout receipts, and the source classification does not establish buyer identity. The unpaid HTTP 402 probe proves no completed sale from that request. Total revenue, fees, expenses, and payouts remain unreconciled until authoritative transaction/receipt/account data is available. Do not infer revenue from deployment, listing, or challenge activity.
 
 ## Canonical production catalog
 
