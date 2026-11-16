@@ -11,7 +11,7 @@ Input is a JSON object containing:
 - manifest: expected x402Version, resource, and accepts.
 - manifest.resource.url is required. description and mimeType are compared when supplied.
 - Each accepts array contains 1–20 offer objects. Object key order and offer list order do not matter; duplicate offers are counted.
-- Serialized input is limited to 65,536 UTF-8 bytes.
+- Serialized input is limited to 65,536 UTF-8 bytes and 64 JSON container levels.
 
 Output contains consistent, offer counts, and bounded mismatch codes and paths. Values are not echoed. Invalid inputs throw X402MetadataInputError with a stable code; an HTTP adapter should map it to status 400.
 

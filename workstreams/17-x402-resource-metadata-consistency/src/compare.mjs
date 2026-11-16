@@ -1,5 +1,6 @@
 export const MAX_INPUT_BYTES = 65_536;
 export const MAX_OFFERS = 20;
+export const MAX_NESTING_DEPTH = 64;
 
 const RESOURCE_FIELDS = ["url", "description", "mimeType"];
 
@@ -31,6 +32,21 @@ function validateOffers(value, label) {
   }
   if (value.some((offer) => !isRecord(offer))) {
     inputError("invalid_offer", label + " entries must be objects");
+  }
+}
+
+function validateDepth(root) {
+  const pending = [{ value: root, depth: 0 }];
+  while (pending.length > 0) {
+    const current = pending.pop();
+    if (!isRecord(current.value) && !Array.isArray(current.value)) continue;
+    const depth = current.depth + 1;
+    if (depth > MAX_NESTING_DEPTH) {
+      inputError("input_too_deep", "Serialized input must not exceed " + MAX_NESTING_DEPTH + " JSON container levels");
+    }
+    for (const child of Object.values(current.value)) {
+      pending.push({ value: child, depth });
+    }
   }
 }
 
@@ -100,6 +116,7 @@ export function compareChallengeToManifest(input) {
   if (new TextEncoder().encode(serialized).byteLength > MAX_INPUT_BYTES) {
     inputError("input_too_large", "Serialized input must not exceed " + MAX_INPUT_BYTES + " UTF-8 bytes");
   }
+  validateDepth(input);
 
   const { challenge, manifest } = input;
   validateVersion(challenge.x402Version, "challenge.x402Version");

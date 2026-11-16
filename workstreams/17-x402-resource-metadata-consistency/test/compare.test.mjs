@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   compareChallengeToManifest,
   MAX_OFFERS,
+  MAX_NESTING_DEPTH,
   X402MetadataInputError,
 } from "../src/compare.mjs";
 
@@ -90,6 +91,22 @@ test("20 offers are accepted and 21 are rejected", () => {
   input.challenge.accepts.push(structuredClone(payment));
   assert.throws(() => compareChallengeToManifest(input), (error) =>
     error instanceof X402MetadataInputError && error.code === "invalid_offers");
+});
+
+test("nesting at depth 64 passes and depth 65 is rejected", () => {
+  const input = fixture();
+  let extra = { leaf: true };
+  for (let index = 0; index < MAX_NESTING_DEPTH - 5; index += 1) {
+    extra = { child: extra };
+  }
+  input.manifest.accepts[0].extra = structuredClone(extra);
+  input.challenge.accepts[0].extra = structuredClone(extra);
+  assert.equal(compareChallengeToManifest(input).consistent, true);
+
+  extra = { child: extra };
+  input.manifest.accepts[0].extra = structuredClone(extra);
+  input.challenge.accepts[0].extra = structuredClone(extra);
+  assert.throws(() => compareChallengeToManifest(input), { code: "input_too_deep" });
 });
 
 test("empty offers and invalid versions produce input errors", () => {
