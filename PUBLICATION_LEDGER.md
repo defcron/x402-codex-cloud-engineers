@@ -19,7 +19,9 @@ Status at checkpoint: 50 existing chats received the restart prompt; acknowledge
 
 | Engineer | Assigned starting concept | Reservation/state |
 |---|---|---|
-| 01–50 | Use the concept in the engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 01–42 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 43 | `x402-settlement-receipt-reconcile` — reconcile a supplied x402 settlement receipt against expected network, asset, recipient, amount, and transaction reference; structural evidence only until chain verification is implemented | Reserved 2026-11-16 UTC; distinctness checked against live catalog (x402 payment challenge inspection and offer comparison) and visible peer concepts; implementation blocked pending writable isolated workspace and full peer reservation/candidate reconciliation |
+| 44–50 | Use the concept in each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 
 Before implementation, replace the row with the specific service key and owner. If functionality overlaps another reservation or live route, do not keep both reservations; reassign one to a distinct customer job. Add commit/branch, tests, live URL, deployment version, listing ID/status, and exact checkpoint before progressing state.
 
