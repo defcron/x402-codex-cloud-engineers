@@ -29,6 +29,16 @@ class PaginationTraceTests(unittest.TestCase):
         self.assertIn("trace_incomplete", codes)
         self.assertNotIn("secret-token", repr(result))
 
+    def test_page_after_terminal_is_reported(self):
+        result = check_pagination_trace({
+            "mode": "cursor",
+            "pages": [
+                {"has_more": False, "item_ids": ["a"]},
+                {"request_cursor": None, "has_more": False, "item_ids": ["b"]},
+            ],
+        })
+        self.assertIn("page_after_terminal", {f["code"] for f in result["findings"]})
+
     def test_offset_sequence_and_boundary_limit_pass(self):
         result = check_pagination_trace({
             "mode": "offset",
@@ -82,6 +92,8 @@ class PaginationTraceTests(unittest.TestCase):
     def test_malformed_and_oversized_inputs_are_rejected(self):
         with self.assertRaises(ContractInputError):
             check_pagination_trace({"mode": "unknown", "pages": []})
+        with self.assertRaises(ContractInputError):
+            check_pagination_trace({"mode": [], "pages": []})
         with self.assertRaises(ContractInputError):
             check_pagination_trace({"mode": "cursor", "pages": [{"has_more": 1, "item_ids": []}]})
         with self.assertRaises(ContractInputError):
