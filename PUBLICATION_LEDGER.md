@@ -15,25 +15,62 @@ Check the live OpenAPI document immediately before reserving a feature and again
 
 ## Engineer reservation roster
 
-Status at checkpoint: 50 existing chats received the restart prompt; acknowledgements and running state are not yet verified. A concept reservation is not a production deployment or PayAPI submission.
+Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is not evidence of implementation. The following are exclusive CTO-issued candidate keys. These are design/build reservations only: **no deployment target or PayAPI quota slot is allocated**. Before production integration, the owner must recheck behavior against the live OpenAPI catalog and resolve any genuine overlap.
 
-| Engineer | Assigned starting concept | Reservation/state |
+| Engineer | Exclusive service key / customer job | State and next action |
 |---|---|---|
-| 01–15 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 16 | `api-pagination-contract-checker` — inspect pagination behavior across captured response traces | Reserved in branch `engineer-16-api-pagination-contract-checker`; registry reconciliation pending; implementation status per branch checkpoint |
-| 17–20 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 21 | `ics-recurrence-occurrence-expander` — expand recurring VEVENTs into explicit instances in a caller-bounded window; excludes conflict detection | Reserved 2026-11-16 03:05 UTC on `engineer-21-ics-recurrence-occurrences`; checkpoint commit `40e9a5e7e2eab9ae5b1764ae6c58ddbf27735b23`; live OpenAPI v0.8.206 confirms recurrence is preserved but not expanded by `/v1/ics-events`, and `/v1/ics-conflicts` does not expand recurrence. Implementation not started; peer concept roster remains incomplete; no deployment/payment/submission or quota reservation. |
-| 22–26 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 27 | `http_forwarding_policy_audit_v1` — audit caller-supplied forwarding policy against observed headers across a bounded proxy chain; report allowlist violations, missing required forwards, and untrusted forwarded identity claims. Distinct customer task from #47 header normalization/duplicate detection, #11 `WWW-Authenticate` parsing, #13 media-type negotiation, and live single-header parsers. | Reserved by Engineer 27 at 2026-11-16 03:03 UTC after live catalog check (v0.8.206); implementation not started; no deployment/payment/submission; no submission quota reserved. |
-| 28 | `openapi-version-compatibility-matrix` — compare full OpenAPI operation surfaces across releases | Reserved in branch `engineer-28-openapi-compatibility-matrix`; shared registry reconciliation pending; implementation status per branch checkpoint |
-| 29–39 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 40 | `http-cache-policy-evaluator` — analyze caller-supplied request/response metadata for HTTP cache storage scope and freshness, without fetching a URL | Reserved 2026-11-16 03:09 UTC in branch `engineer-40-http-cache-policy-evaluator`, checkpoint commit `e1ce9cf2f97992f87669a03ffa5e559b3331602f`. Starting JSON flatten/unflatten concept was abandoned because live OpenAPI v0.8.206 already exposes both `/v1/json-flatten` and `/v1/json-unflatten`. Cache evaluator checked against all 74 live operations, visible reservations 16/21/27/28/43/50, and matching PayAPI catalog searches; no matching cache-policy evaluator found. The 01–15, 17–20, 22–26, 29–39, 41–42, and 44–49 title concepts are not reconciled, so global overlap confirmation remains pending. No deployment, payment, submission, or quota reservation; no individual production target assigned. |
-| 41–42 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 43 | `x402-settlement-receipt-reconcile` — reconcile x402 settlement fields with expected EVM ERC-20 transfer evidence | Implemented prototype in local `work` checkout at base `01168bc`; 8 focused tests pass; files remain local/uncommitted. No deployment, live RPC verification, or PayAPI submission. |
-| 44–49 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
-| 50 | `webhook-delivery-evidence-bundle` — normalize bounded, caller-supplied webhook event/attempt exports into per-event payload digests, attempt timelines, retry/result anomalies, and a reproducible evidence manifest; post-hoc only, no sending or provenance claims | Reserved 2026-11-16 03:04 UTC after live OpenAPI 0.8.206 and PayAPI catalog comparison; distinct from visible engineer 43 settlement-receipt reconciliation, scheduler/relay/signature-verification listings, and current worker utilities. Peer assignments 01–42 and 44–49 remain unreconciled. Implementation pending writable isolated workspace; no individual deployment target assigned |
+| 01 | `agent-text-normalization` — normalize Unicode/whitespace for agent text pipelines | Assigned; build/test artifact in isolated branch; no quota reserved |
+| 02 | `http-cache-control-ttl-audit` — assess caller-supplied cache directives and effective freshness | Assigned; no quota reserved |
+| 03 | `safe-url-preflight` — static HTTP(S) URL canonicalization and SSRF-risk syntax lint | Tested local artifact reported; transfer complete patch and 5 tests to CTO; not deployed |
+| 04 | `html-table-schema-conformance` — compare extracted table headers/row shape to a caller contract | Reassigned from existing table extraction; return implementation/test patch |
+| 05 | `csv-to-sql-preview` — preview a bounded import mapping as parameterized SQL | Assigned; confirm no overlap with current SQL preview; no quota reserved |
+| 06 | `csv-spreadsheet-formula-risk` — identify formula-like cells in supplied CSV without changing values | Assigned; compare with JSON-to-CSV output sanitization; no quota reserved |
+| 07 | `json-pointer-path-contract-check` — report path presence/type without redacting document values | Reassigned from live JSON Pointer redaction; return implementation/test patch |
+| 08 | `yaml-duplicate-key-audit` — report duplicate mapping keys in caller-supplied YAML | Reassigned from live JSON duplicate-key route; return implementation/test patch |
+| 09 | `jwks-static-preflight` — inspect one JWKS for structural issues, duplicate kids, or private-key fields | Tested local artifact reported; transfer complete patch and 7 tests; distinct from #10 temporal rotation checks |
+| 10 | `jwks-rotation-cache-policy` — compare two JWKS snapshots for overlap and caller-stated cache freshness | Tested local artifact reported; 5 tests; transfer patch and keep distinct from #09 static checks |
+| 11 | `oauth-challenge-scope-parser` — parse WWW-Authenticate challenge parameters and scopes | Assigned; no quota reserved |
+| 12 | `rfc9457-problem-detail-validator` — validate a captured Problem Details object and required members | Assigned; distinguish from #15 construction and #38 error mapping |
+| 13 | `http-media-type-negotiation-audit` — analyze captured Accept/Content-Type pairs for negotiation mismatch | Assigned; no quota reserved |
+| 14 | `openapi-security-reference-check` — find dangling/malformed security scheme references in a supplied spec | Assigned; distinct from #44's explanatory summary |
+| 15 | `rfc9457-problem-detail-constructor` — construct a bounded Problem Details object from explicit fields | Assigned; distinguish from #12 validation and #38 mapping |
+| 16 | `api-pagination-contract-check` — inspect captured API response traces for pagination completeness | Reservation recorded by Engineer 16; reconcile artifact checkpoint |
+| 17 | `x402-resource-metadata-consistency` — compare caller-supplied payment challenge and resource manifest fields | Reassigned from existing challenge inspection/offer comparison; return implementation/test patch |
+| 18 | `a2a-task-state-transition-audit` — validate captured task state changes against A2A lifecycle rules | Assigned; return implementation/test patch |
+| 19 | `mcp-jsonrpc-error-envelope-audit` — inspect captured JSON-RPC error envelopes and tool-call correlation | Reassigned from overlapping tool-argument lint; return implementation/test patch |
+| 20 | `a2a-agent-card-capability-check` — validate declared A2A agent-card capability fields | Assigned; no quota reserved |
+| 21 | `ics-recurrence-occurrence-expander` — expand VEVENT recurrence into explicit instances in a caller-bounded window | Reservation recorded at checkpoint; reconcile existing artifact |
+| 22 | `graphql-sdl-compatibility` — report breaking and dangerous changes between GraphQL SDL schemas | Reserved for central integration; full patch requested from Engineer 22 |
+| 23 | `wsdl-operation-surface-index` — extract operations, bindings, and messages from bounded WSDL | Assigned; no quota reserved |
+| 24 | `xsd-schema-validation-report` — validate caller-supplied XML against caller-supplied XSD with bounded local processing | Reassigned from existing XML extraction/conversion; return implementation/test patch |
+| 25 | `xml-namespace-consistency-audit` — inspect namespace bindings and qualified-name consistency without conversion | Assigned; no quota reserved |
+| 26 | `webhook-retry-policy-planner` — produce bounded retry schedule from policy and Retry-After evidence | Tested local branch artifact `f6b9195` reported; transfer complete diff and 8 tests; distinguish from #46/#50 |
+| 27 | `http-forwarded-header-trust-audit` — identify untrusted forwarded identity claims across a captured proxy chain | Reservation recorded by Engineer 27; no quota reserved |
+| 28 | `api-version-routing-inspector` — identify version selector and route match in a captured request | Assigned; distinct from #29 schema diff and #42 media-type negotiation |
+| 29 | `openapi-operation-compatibility-diff` — compare operation contracts across two OpenAPI documents | Assigned; no quota reserved |
+| 30 | `dst-schedule-gap-fold-audit` — identify nonexistent/repeated local schedule times around DST transitions | Reassigned from general timezone conversion; return implementation/test patch |
+| 31 | `cron-next-run-calculator` — compute bounded next occurrences from a declared cron dialect and time zone | Assigned; return implementation/test patch |
+| 32 | `uri-template-conformance-check` — validate captured URI templates and expansion inputs | Assigned; no quota reserved |
+| 33 | `http-cache-key-policy-linter` — compare captured request/response cache-key and Vary behavior | Assigned; return implementation/test patch |
+| 34 | `csv-byte-encoding-diagnostics` — detect BOM/encoding validity from bounded uploaded bytes | Reassigned from delimiter detection already in CSV tools; return implementation/test patch |
+| 35 | `json-schema-format-assertion-audit` — validate explicitly supported string formats in a bounded schema/data pair | Reassigned; check exact supported-format gap and return implementation/test patch |
+| 36 | `json-ref-graph-cycle-inspector` — report local JSON Schema reference graph cycles and unresolved pointers | Reassigned from existing JSON diff; return implementation/test patch |
+| 37 | `api-request-response-fixture-builder` — build bounded test fixtures from paired request/response contracts | Assigned; return implementation/test patch |
+| 38 | `api-error-response-mapping-validator` — map captured status/body/header tuples to a caller-declared error taxonomy | Reassigned; distinguish from #12/#15 RFC9457 objects and existing retry-after parser |
+| 39 | `mcp-openapi-capability-parity-audit` — compare supplied OpenAPI operations with MCP tool definitions for missing parity | Assigned; return implementation/test patch |
+| 40 | `json-null-missing-change-audit` — report null-versus-absent field changes across JSON records | Reassigned from live flatten/unflatten routes; no quota reserved |
+| 41 | `html-form-accessibility-audit` — check caller-supplied form controls for basic accessible names and label associations | Reassigned from the already deployed form extractor; return implementation/test patch |
+| 42 | `api-version-media-negotiation-audit` — evaluate captured Accept vendor media types and declared API versions | Assigned; distinct from #28 route-version inspection |
+| 43 | `x402-settlement-receipt-reconciliation` — reconcile a supplied receipt against expected network, asset, payTo, amount, and transaction | Reservation recorded; implementation remains blocked in read-only cloud checkout; patch response requested |
+| 44 | `openapi-security-requirement-explainer` — explain operation security requirements and referenced schemes from a supplied OpenAPI document | Assigned; return implementation/test patch |
+| 45 | `xml-sensitive-node-redaction` — remove explicitly selected XML paths while preserving document structure | Assigned; no quota reserved |
+| 46 | `webhook-signature-input-canonicalizer` — produce a canonical byte representation from caller-selected signature inputs | Assigned; distinguish from #26 retries and #50 post-hoc evidence |
+| 47 | `http-header-normalization-duplicate-check` — canonicalize supplied header pairs and detect case-insensitive duplicates | Reassigned; distinguish from #02 cache directives, #11 auth challenge, and #13 media negotiation |
+| 48 | `http-multipart-boundary-field-inspector` — inspect bounded multipart bodies for part headers, boundaries, and field names | Assigned; no quota reserved |
+| 49 | `timezone-local-time-disambiguation` — classify one local date-time in an IANA zone as valid, skipped, or ambiguous | Reassigned from existing timestamp conversion; return implementation/test patch |
+| 50 | `webhook-delivery-evidence-bundle` — turn caller-supplied event/attempt records into a post-hoc timeline and digest manifest | Reservation recorded; no deployment/submission; reconcile with #26 retry planner and #46 signature canonicalizer |
 
-Before implementation, replace the row with the specific service key and owner. If functionality overlaps another reservation or live route, do not keep both reservations; reassign one to a distinct customer job. Add commit/branch, tests, live URL, deployment version, listing ID/status, and exact checkpoint before progressing state.
+**Artifact transfer protocol:** cloud workspaces have reported read-only mounts. For an artifact not available through a pushed branch, its owner must reply with a complete unified diff (including tests and README/example), exact base commit, exact test command/output, and source hashes. The CTO integrates it in the writable production repo, reruns checks, and keeps the cloud artifact separately identified. A reply patch or passing prototype test is not a production deployment.
 
 ## PayAPI submission limit ledger
 
