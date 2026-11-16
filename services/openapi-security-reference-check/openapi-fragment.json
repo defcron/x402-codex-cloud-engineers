@@ -1,0 +1,79 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI Security Reference Check integration fragment",
+    "version": "0.1.0",
+    "description": "Unpublished static analysis contract; not a live route."
+  },
+  "paths": {
+    "/v1/openapi-security-reference-check": {
+      "post": {
+        "summary": "Find malformed or dangling OpenAPI security references",
+        "description": "Inspect one supplied OpenAPI 3.0.x or 3.1.x JSON document. Does not explain security posture or contact endpoints or resolve external references.",
+        "x-payment-info": {
+          "protocols": ["x402"],
+          "price": {"mode": "fixed", "currency": "USD", "amount": "0.005"}
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["openapi_json"],
+                "additionalProperties": false,
+                "properties": {
+                  "openapi_json": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 262144,
+                    "description": "OpenAPI 3.0.x or 3.1.x JSON document."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Malformed/dangling security-reference findings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["openapi_version", "title", "operation_count", "reference_issue_count", "findings", "findings_truncated", "note"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "openapi_version": {"type": "string"},
+                    "title": {"type": ["string", "null"]},
+                    "operation_count": {"type": "integer"},
+                    "reference_issue_count": {"type": "integer"},
+                    "findings_truncated": {"type": "boolean"},
+                    "note": {"type": "string"},
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["code", "severity", "pointer", "message"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "code": {"type": "string"},
+                          "severity": {"type": "string", "enum": ["error"]},
+                          "pointer": {"type": "string"},
+                          "message": {"type": "string"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {"description": "Invalid JSON, unsupported version, or malformed request body"},
+          "402": {"description": "x402 payment required; challenge supplies amount, network, asset, and recipient"},
+          "413": {"description": "OpenAPI document exceeds the character or path limit"}
+        }
+      }
+    }
+  }
+}
