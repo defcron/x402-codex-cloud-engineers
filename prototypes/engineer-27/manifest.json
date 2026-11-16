@@ -1,0 +1,42 @@
+{
+  "service_key": "http-forwarded-header-trust-audit",
+  "state": "prototype",
+  "route": {
+    "method": "POST",
+    "path": "/v1/http-forwarding-audit",
+    "handler_export": "handleRequest",
+    "module": "prototypes/engineer-27/http-forwarding-audit.mjs"
+  },
+  "request": {
+    "content_type": "application/json",
+    "max_bytes": 65536,
+    "max_hops": 8,
+    "max_header_names_per_map_or_policy_list": 64,
+    "max_values_per_header": 8,
+    "max_header_value_characters": 2048
+  },
+  "response": {
+    "max_findings": 256,
+    "includes_header_values": false
+  },
+  "runtime": {
+    "model_api_credits_usd": 0,
+    "external_network_requests": false,
+    "source_retention": false
+  },
+  "payment": {
+    "x402_middleware_integrated": false,
+    "assigned_price_usd": null
+  },
+  "production_integration": {
+    "repository": "defcron/agent-evidence-utility",
+    "route_registration_file": "src/worker.ts",
+    "reference_helper": "src/http-response-utils.ts",
+    "reference_test": "test/http-response-utils.test.js",
+    "openapi_and_mcp_discovery": "required",
+    "deployment_target": null,
+    "deployment_command": null,
+    "blocker": "Central production integration is required; no individual deployment target or authorized deployment control is assigned."
+  },
+  "focused_test_command": "node --test prototypes/engineer-27/http-forwarding-audit.test.mjs"
+}
