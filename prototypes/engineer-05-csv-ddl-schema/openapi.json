@@ -1,0 +1,135 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CSV schema to SQL DDL",
+    "version": "0.1.0",
+    "description": "Local integration contract only; not deployed. Deterministic type inference returns DDL only."
+  },
+  "paths": {
+    "/v1/csv-create-table": {
+      "post": {
+        "operationId": "csvCreateTableDdl",
+        "summary": "Infer a CSV schema and return CREATE TABLE SQL ($0.005)",
+        "description": "Returns a schema draft only. Never executes SQL or returns CSV cell values.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableRequest"
+              },
+              "examples": {
+                "basic": {
+                  "value": {
+                    "csv": "id,name\n1,Ada\n2,Bob",
+                    "table": "people",
+                    "dialect": "sqlite"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated DDL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableResponse"
+                },
+                "examples": {
+                  "sqlite": {
+                    "value": {
+                      "statement": "CREATE TABLE \"people\" (\\n  \"id\" INTEGER,\\n  \"name\" TEXT\\n);\\n",
+                      "dialect": "sqlite",
+                      "note": "DDL draft inferred from supplied CSV values; review before use. SQL is not executed and no cell values are returned."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request shape, malformed CSV, invalid headers, unsupported dialect, or inconsistent row width"
+          },
+          "402": {
+            "description": "Payment required when mounted behind the shared x402 middleware"
+          },
+          "413": {
+            "description": "CSV exceeds configured character, record, or column bounds"
+          }
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ],
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005"
+          },
+          "summary": "Fixed $0.005 per successful call."
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateTableRequest": {
+        "type": "object",
+        "required": [
+          "csv",
+          "table"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "csv": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 262144
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "dialect": {
+            "type": "string",
+            "enum": [
+              "postgres",
+              "sqlite",
+              "mysql"
+            ],
+            "default": "postgres"
+          }
+        }
+      },
+      "CreateTableResponse": {
+        "type": "object",
+        "required": [
+          "statement",
+          "dialect",
+          "note"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string"
+          },
+          "dialect": {
+            "type": "string",
+            "enum": [
+              "postgres",
+              "sqlite",
+              "mysql"
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
