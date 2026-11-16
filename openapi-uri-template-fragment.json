@@ -1,0 +1,83 @@
+{
+  "paths": {
+    "/v1/uri-template": {
+      "post": {
+        "operationId": "uriTemplateConformanceCheck",
+        "summary": "Check and expand an RFC 6570 URI template ($0.005)",
+        "description": "Reports referenced variables and RFC 6570 expression operators, then expands a caller-supplied template with bounded JSON values. Request JSON is capped at 65,536 bytes; variable names at 256 characters. Does not fetch or validate the destination URL. Deterministic; no model or external API calls.",
+        "tags": ["uri-template", "rfc6570", "url-template", "conformance-check", "agent-utilities"],
+        "x-payment-info": {
+          "protocols": ["x402"],
+          "price": { "mode": "fixed", "currency": "USD", "amount": "0.005" },
+          "summary": "x402"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["template", "values"],
+                "additionalProperties": false,
+                "properties": {
+                  "template": { "type": "string", "minLength": 1, "maxLength": 4096, "description": "At most 100 expressions and 50 distinct variables; RFC 6570 literal and expression syntax." },
+                  "values": {
+                    "type": "object",
+                    "maxProperties": 50,
+                    "propertyNames": { "maxLength": 256 },
+                    "description": "JSON scalar, scalar array, or flat scalar map values; at most 4,096 combined scalar/key characters.",
+                    "additionalProperties": {
+                      "oneOf": [
+                        { "type": ["string", "number", "integer", "boolean", "null"] },
+                        { "type": "array", "maxItems": 100, "items": { "type": ["string", "number", "integer", "boolean", "null"] } },
+                        { "type": "object", "maxProperties": 100, "additionalProperties": { "type": ["string", "number", "integer", "boolean", "null"] } }
+                      ]
+                    }
+                  }
+                }
+              },
+              "example": {
+                "template": "/users/{id}{?fields*}",
+                "values": { "id": "a/b", "fields": ["name", "email"] }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template inspection and expansion result, with output capped at 262,144 characters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["valid", "variables", "missing_variables", "unused_variables", "expanded"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "valid": { "type": "boolean", "const": true },
+                    "variables": { "type": "array", "items": { "type": "string" } },
+                    "missing_variables": { "type": "array", "items": { "type": "string" } },
+                    "unused_variables": { "type": "array", "items": { "type": "string" } },
+                    "expanded": { "type": "string", "maxLength": 262144 }
+                  }
+                },
+                "example": {
+                  "valid": true,
+                  "variables": ["id", "fields"],
+                  "missing_variables": [],
+                  "unused_variables": [],
+                  "expanded": "/users/a%2Fb?fields=name&fields=email"
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid template syntax, request shape, or value types" },
+          "405": { "description": "Only POST is supported" },
+          "413": { "description": "Request bytes, template, variable name/count, combined values, collection size, or expanded output exceeds its limit" },
+          "415": { "description": "Content-Type must be application/json" },
+          "500": { "description": "Unexpected URI-template processing failure" },
+          "402": { "description": "x402 payment required; challenge specifies USDC amount, network, asset, and recipient" }
+        }
+      }
+    }
+  }
+}
