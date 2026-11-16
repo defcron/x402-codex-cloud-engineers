@@ -19,7 +19,7 @@ Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is 
 
 | Engineer | Exclusive service key / customer job | State and next action |
 |---|---|---|
-| 01 | `agent-text-normalization` — normalize Unicode/whitespace for agent text pipelines | Assigned; build/test artifact in isolated branch; no quota reserved |
+| 01 | `agent-text-normalization` — normalize Unicode/whitespace for agent text pipelines | Implemented in `defcron/agent-evidence-utility` branch `codex/engineer-01-agent-text-normalization` at `4ffabb89e6b57e13648fdfeae032aab57d06ff1e`; focused utility tests 26/26, full suite 381/381, worker build and Wrangler dry-run passed. Live overlap check: only CSV-column cleanup and model-based text insights; neither provides general Unicode normalization for free text. No assigned deployment target or PayAPI quota slot; not deployed/submitted. Existing `html-forms` PayAPI attempt remains uncertain and must be reconciled before any new submission; no slot reservation exists. Ready for CTO integration review. |
 | 02 | `http-cache-control-ttl-audit` — assess caller-supplied cache directives and effective freshness | Assigned; no quota reserved |
 | 03 | `safe-url-preflight` — static HTTP(S) URL canonicalization and SSRF-risk syntax lint | Tested local artifact reported; transfer complete patch and 5 tests to CTO; not deployed |
 | 04 | `html-table-schema-conformance` — compare extracted table headers/row shape to a caller contract | Reassigned from existing table extraction; return implementation/test patch |
