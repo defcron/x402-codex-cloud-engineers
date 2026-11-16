@@ -1,0 +1,18 @@
+{
+  "request": {
+    "origin": "https://agent.example",
+    "method": "POST",
+    "headers": ["authorization", "content-type"],
+    "credentials": true
+  },
+  "response": {
+    "status": 204,
+    "headers": [
+      ["Access-Control-Allow-Origin", "https://agent.example"],
+      ["Access-Control-Allow-Methods", "POST, OPTIONS"],
+      ["Access-Control-Allow-Headers", "authorization, content-type"],
+      ["Access-Control-Allow-Credentials", "true"]
+    ]
+  },
+  "expected": {"allowed": true, "issues": []}
+}
