@@ -71,6 +71,22 @@ test('marks unchanged field distributions', () => {
   assert.equal(result.summary.changed_fields, 0);
 });
 
+test('does not mark sample-size-only count changes as distribution changes', () => {
+  const result = audit(
+    [{ x: null }, {}, { x: 1 }],
+    [{ x: null }, {}, { x: 1 }, { x: null }, {}, { x: 1 }],
+    ['/x'],
+  );
+  assert.equal(result.fields[0].delta.missing_count, 1);
+  assert.equal(result.fields[0].delta.null_count, 1);
+  assert.equal(result.fields[0].delta.value_count, 1);
+  assert.deepEqual(
+    [result.fields[0].before.missing_rate_bps, result.fields[0].before.null_rate_bps, result.fields[0].before.value_rate_bps],
+    [result.fields[0].after.missing_rate_bps, result.fields[0].after.null_rate_bps, result.fields[0].after.value_rate_bps],
+  );
+  assert.equal(result.fields[0].changed, false);
+});
+
 test('rejects empty batches and non-object rows', () => {
   failCode(() => audit([], [{}]), 'invalid_records');
   failCode(() => audit([null], [{}]), 'invalid_record');
@@ -78,6 +94,7 @@ test('rejects empty batches and non-object rows', () => {
 });
 
 test('rejects empty, invalid, duplicate, and overlong pointers', () => {
+  failCode(() => audit([{}], [{}], []), 'invalid_fields');
   failCode(() => audit([{}], [{}], ['']), 'invalid_pointer');
   failCode(() => audit([{}], [{}], ['email']), 'invalid_pointer');
   failCode(() => audit([{}], [{}], ['/a~2b']), 'invalid_pointer');

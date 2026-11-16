@@ -23,7 +23,7 @@ const result = auditJsonNullMissingChanges({
 console.log(result.fields[0]);
 ```
 
-For each JSON Pointer, each cohort reports record, missing, null, and non-null counts plus rates in basis points (10,000 bps = 100%). The delta is `after - before`. The result contains no record values or identifiers.
+For each JSON Pointer, each cohort reports record, missing, null, and non-null counts plus rates in basis points (10,000 bps = 100%). The delta is `after - before`. `changed` reflects a difference in the reported distribution rates, so a different cohort size alone does not count as distribution drift. The result contains no record values or identifiers.
 
 ## Why this differs from existing services
 

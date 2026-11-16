@@ -127,9 +127,8 @@ export function auditJsonNullMissingChanges(input) {
   if (beforeRecords.length > MAX_RECORDS_PER_BATCH || afterRecords.length > MAX_RECORDS_PER_BATCH) {
     fail('record_limit_exceeded', `each batch is limited to ${MAX_RECORDS_PER_BATCH} records`, 413);
   }
-  if (!Array.isArray(fields) || fields.length === 0 || fields.length > MAX_FIELDS) {
-    fail('field_limit_exceeded', `fields must contain between 1 and ${MAX_FIELDS} pointers`, 413);
-  }
+  if (!Array.isArray(fields) || fields.length === 0) fail('invalid_fields', 'fields must contain at least one JSON Pointer');
+  if (fields.length > MAX_FIELDS) fail('field_limit_exceeded', `fields are limited to ${MAX_FIELDS} pointers`, 413);
   const decoded = [];
   const seenFields = new Set();
   for (const path of fields) {
@@ -163,7 +162,7 @@ export function auditJsonNullMissingChanges(input) {
       null_rate_bps: after.null_rate_bps - before.null_rate_bps,
       value_rate_bps: after.value_rate_bps - before.value_rate_bps,
     };
-    const changed = Object.values(delta).some((difference) => difference !== 0);
+    const changed = delta.missing_rate_bps !== 0 || delta.null_rate_bps !== 0 || delta.value_rate_bps !== 0;
     return { path, before, after, delta, changed };
   });
 
