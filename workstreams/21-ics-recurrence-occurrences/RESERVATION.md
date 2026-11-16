@@ -1,18 +1,21 @@
-# Engineer 21 reservation: bounded ICS recurrence occurrences
+# Engineer 21 checkpoint: bounded ICS recurrence occurrences
 
 - **Service key:** `ics-recurrence-occurrence-expander`
 - **Owner:** Engineer 21
-- **State:** Reserved in isolated branch and recorded in shared ledger. Peer concept reconciliation remains incomplete.
-- **Branch:** `engineer-21-ics-recurrence-occurrences`
-- **Customer job:** Turn recurring VEVENT definitions into concrete event instances within a caller-specified time window so an agent can populate a scheduler or inspect a finite agenda.
-- **Function boundary:** Expand recurrence only; do not detect event conflicts, connect to calendars, fetch URLs, or modify calendar data.
-- **Inputs:** Caller-supplied ICS text, explicit UTC or floating start/end bounds, and a maximum occurrence count. Target limits: 64 KiB decoded ICS, 100 VEVENTs, a 366-day window, and at most 500 output occurrences.
-- **Output:** Ordered instances containing source event index, UID, summary, start, end, and occurrence index; report skipped/unsupported component counts.
-- **Example:** A weekly UTC event with COUNT=3 and DTSTART 2026-11-16T14:00Z expands to three starts: Nov 16, 23, and 30 at 14:00Z, when the window covers those dates.
-- **Failure cases:** Reject malformed VCALENDAR, invalid/unsupported recurrence rules, unsupported TZID/local-time cases, detached recurrence overrides, invalid/reversed bounds, oversized input/window/output, and ambiguous duration definitions with stable 4xx issue codes. Never fetch a calendar URL or echo full descriptions/attendees.
-- **Initial supported subset:** DTSTART/DTEND; RRULE FREQ=DAILY or WEEKLY with INTERVAL, COUNT, UNTIL and simple BYDAY; RDATE/EXDATE; UTC and floating date-times. Reject other recurrence constructs explicitly rather than silently approximating.
-- **Runtime target:** Deterministic, bounded, no network, storage, or paid model/API calls; proposed integration price at most USD 0.005.
-- **Live distinctness check (OpenAPI v0.8.206, 2026-11-16):** `POST /v1/ics-events` parses 1–200 VEVENTs and preserves RRULE/RDATE but explicitly does not expand recurrence. `POST /v1/ics-conflicts` compares explicit DTSTART/DTEND intervals but explicitly does not expand recurrence, calculate DURATION, or convert time zones. This reservation excludes conflict detection, the directly overlapping live function.
-- **Known other reservations:** Engineer 16's `api-pagination-contract-checker` and engineer 28's `openapi-version-compatibility-matrix` are different customer jobs. The ledger only groups the remaining chats as 01–50 by title; no actual concepts for those engineers are recorded, so global candidate distinctness is unverified.
-- **Shared production:** No production integration, deployment, PayAPI submission, wallet spend, or secret use is part of this checkpoint.
-- **Next action:** Implement and run focused bounded recurrence tests in an authorized writable isolated source workspace after confirming source-repository conventions; reconcile against other engineers before integration.
+- **State:** Implemented and tested as an isolated helper prototype; no public route or deployment.
+- **Reservation branch:** `defcron/x402-codex-cloud-engineers:engineer-21-ics-recurrence-occurrences`
+- **Source branch:** `defcron/agent-evidence-utility:engineer-21-ics-recurrence-occurrences`
+- **Source commit:** `a132f3fb500a2c301365958a94d9c70d5ef907f3`
+- **Customer job:** Turn recurring UTC VEVENT definitions into concrete event instances within a bounded time window for agent schedulers and finite agenda views.
+- **Function boundary:** Expand recurrence only. Do not detect conflicts, connect to calendars, fetch URLs, or modify calendar data.
+- **Input:** ICS text, UTC `window_start` and `window_end`, optional `max_occurrences` (default 200; max 500).
+- **Bounds:** 65,536 ICS characters, 100 VEVENTs, 366-day window, DTSTART no more than 366 days before the window, and 500 total output occurrences.
+- **Output:** Source event count and ordered instances with `event_index`, UTC `start`, and UTC `end`; cancelled count and a limitations note. Private UID, summary, description, attendees are not echoed.
+- **Example:** A weekly UTC event with COUNT=3 and DTSTART 2026-11-16T14:00:00Z yields starts Nov 16, 23, and 30 when the window includes those dates.
+- **Supported subset:** UTC DTSTART/DTEND; DAILY or WEEKLY RRULE with INTERVAL, COUNT, UTC UNTIL and simple unnumbered WEEKLY BYDAY; RDATE and EXDATE.
+- **Failures:** Malformed calendar, dates/windows invalid, unsupported TZID/floating/date-only values, RRULE parts or detached RECURRENCE-ID, missing DTEND, excessive input/window/output fail with stable error messages and 4xx-style status fields. No silent timezone/recurrence approximation.
+- **Checks (GitHub Actions run 43797227463, commit above):** `node --test test/ics-recurrence-expand.test.js` — 6 passed; `npm test` — 379 passed; `npm run build` — passed; `./node_modules/.bin/esbuild src/ics-recurrence-expand.ts --bundle --format=esm --platform=browser --target=es2022 --outfile=/tmp/ics-recurrence-expand.js` — passed. No runtime model/API calls.
+- **Live distinctness (OpenAPI v0.8.206):** `POST /v1/ics-events` preserves recurrence declarations but does not expand them. `POST /v1/ics-conflicts` checks explicitly bounded interval overlaps but does not expand recurrence, calculate DURATION, or convert time zones; that conflict function was removed from this workstream.
+- **Known peer concepts checked:** 16 `api-pagination-contract-checker`, 27 `http_forwarding_policy_audit_v1`, 28 `openapi-version-compatibility-matrix`, 43 `x402-settlement-receipt-reconcile`, and 50 `webhook-delivery-evidence-bundle` are distinct jobs. The remaining roster entries still use generic title rows; global candidate reconciliation is incomplete.
+- **Deployment/payment:** The ledger says production deployment is centralized and no individual durable target is assigned. No production route, deployment, wallet spend, PayAPI submission, or secret use occurred. The live unpaid check of existing `/v1/ics-conflicts` returned HTTP 402 with a $0.005 price on Base, Arbitrum, and Polygon; that verifies only the existing route.
+- **Next action:** Central integration owner to review and integrate this helper into a new route after reconciling remaining peer assignments; then live functionality/discovery/402 verification can be assigned.
