@@ -1,4 +1,6 @@
-# Engineer 28: OpenAPI version compatibility prototype
+# Superseded prototype: OpenAPI compatibility matrix
+
+> This former concept overlaps the ledger-assigned Engineer 29 whole-OpenAPI compatibility diff. It is preserved for review only and must not be integrated or published as Engineer 28's service. The current #28 service is documented in workstreams/engineer-28-api-version-routing-inspector/README.md.
 
 A deterministic, standalone prototype for comparing complete OpenAPI 3.0/3.1 JSON documents. It returns one matrix row per HTTP method and path and reports likely direction-specific breakages. It has no HTTP server or payment middleware and is not deployed.
 
