@@ -40,12 +40,36 @@ test("reports missing cache lifetime and a no-store policy", () => {
   assert.ok(result.findings.some(f => f.code === "missing_max_age"));
 });
 
+test("uses s-maxage for shared caches and warns when Age exceeds it", () => {
+  const result = validateJwksCachePolicy({policy, snapshots: [
+    observation(0, ["old"], "public, max-age=900, s-maxage=300"),
+    {...observation(5, ["old"], "public, max-age=900, s-maxage=300"), age_seconds: 301}
+  ]});
+  assert.equal(result.ok, true);
+  assert.equal(result.cache_policy[0].advertised_max_age_seconds, 300);
+  assert.equal(result.summary.warnings, 1);
+  assert.ok(result.findings.some(f => f.code === "stale_snapshot"));
+  assert.ok(!result.findings.some(f => f.code === "max_age_exceeded"));
+});
+
 test("flags insufficient sampled key overlap and rejects ambiguous snapshots", () => {
   const result = validateJwksCachePolicy({policy, snapshots: [
     observation(0, ["old"]), observation(5, ["old", "new"]), observation(10, ["old", "new"]), observation(15, ["new"])
   ]});
   assert.equal(result.ok, false);
   assert.ok(result.findings.some(f => f.code === "insufficient_sampled_overlap"));
+
+  const intermittent = validateJwksCachePolicy({policy, snapshots: [
+    observation(0, ["old"]), observation(5, ["old", "new"]), observation(10, ["old"]),
+    observation(15, ["old", "new"]), observation(20, ["new"])
+  ]});
+  assert.ok(intermittent.findings.some(f => f.code === "insufficient_sampled_overlap"));
+
+  const noReplacement = validateJwksCachePolicy({policy, snapshots: [
+    observation(0, ["old"]), observation(5, []), observation(10, [])
+  ]});
+  assert.ok(noReplacement.findings.some(f => f.code === "removed_keys_without_replacement"));
+
   const duplicate = observation(0, ["same"]);
   duplicate.jwks.keys.push({kid: "same"});
   assert.throws(() => validateJwksCachePolicy({policy, snapshots: [duplicate, observation(5, ["same"])]}), /duplicate kid values/);

@@ -16,7 +16,7 @@ Call `validateJwksCachePolicy(input)` from `validator.mjs`.
 - `snapshots`: 2–20 strictly time-ordered observations with valid ISO `observed_at`, integer `age_seconds`, raw `cache_control` (≤1,024 chars), and `jwks.keys` (≤100 keys, each with a bounded non-empty unique `kid`). Total JSON input is capped at 262,144 characters.
 - Return: `ok`, summary counts, cache report per snapshot, old/new key-pair overlap reports, actionable findings, and a limitation note. Key material is not copied into output.
 
-Malformed or out-of-bound input throws `TypeError`, including duplicate `kid` values within a snapshot because they make old/new key comparison ambiguous. A valid input with policy violations returns `ok:false` and finding codes. It never performs network access.
+Malformed or out-of-bound input throws `TypeError`, including duplicate `kid` values within a snapshot because they make old/new key comparison ambiguous. Removing old keys without any replacement in the final snapshot is an error. A valid input with policy violations returns `ok:false` and finding codes; an observation whose `Age` exceeds its effective cache lifetime is a warning. `s-maxage` takes precedence over `max-age` for the shared-cache freshness check. It never performs network access.
 
 ## Example and focused checks
 

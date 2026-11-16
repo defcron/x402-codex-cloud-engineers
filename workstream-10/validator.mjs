@@ -232,6 +232,9 @@ export function validateJwksCachePolicy(input) {
   const oldKids = [...first].filter(kid => !last.has(kid));
   const newKids = [...last].filter(kid => !first.has(kid));
   const rotations = [];
+  if (oldKids.length > 0 && newKids.length === 0) {
+    findings.push({code: "removed_keys_without_replacement", severity: "error", message: "One or more previously published keys were removed without any replacement key in the final snapshot."});
+  }
   for (const oldKid of oldKids) {
     for (const newKid of newKids) {
       const observed = addRunLength(oldKid, newKid, parsed);
@@ -240,10 +243,6 @@ export function validateJwksCachePolicy(input) {
       if (!passes) findings.push({code: "insufficient_sampled_overlap", severity: "error", message: `An old/new key pair was co-present in snapshots for ${observed}s; derived policy requires ${requiredOverlap}s of sampled overlap.`});
     }
   }
-  if (oldKids.length && newKids.length && rotations.length === 0) {
-    findings.push({code: "rotation_pair_unavailable", severity: "error", message: "No old/new signing key pair was available to evaluate."});
-  }
-
   const errors = findings.filter(f => f.severity === "error").length;
   const warnings = findings.filter(f => f.severity === "warning").length;
   return {
