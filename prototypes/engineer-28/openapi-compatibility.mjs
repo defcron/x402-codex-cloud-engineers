@@ -11,7 +11,8 @@ function parseSpec(text, label) {
   if (text.length > MAX_SPEC_CHARS) throw new RangeError(label + " exceeds 131072 characters");
   let spec;
   try { spec = JSON.parse(text); } catch { throw new TypeError(label + " is not valid JSON"); }
-  if (!spec || typeof spec !== "object" || Array.isArray(spec) || !/^3\\.[01]\\.\\d+(?:[-+].*)?$/.test(spec.openapi ?? "")) {
+  const version = spec?.openapi;
+  if (!spec || typeof spec !== "object" || Array.isArray(spec) || typeof version !== "string" || !(version.startsWith("3.0.") || version.startsWith("3.1."))) {
     throw new TypeError(label + " must be an OpenAPI 3.0 or 3.1 document");
   }
   const stack = [[spec, 0]];
@@ -46,7 +47,7 @@ function addFinding(findings, operation, change, backward, forward, detail) {
 
 function compareInlineSchema(oldSchema, newSchema, pointer, context, findings, operation) {
   if (!oldSchema || !newSchema || typeof oldSchema !== "object" || typeof newSchema !== "object") return;
-  if (oldSchema.$ref !== newSchema.$ref && (oldSchema.$ref || newSchema.$ref)) {
+  if (oldSchema.$ref || newSchema.$ref) {
     addFinding(findings, operation, pointer, "inconclusive", "inconclusive", "Changed $ref is not resolved.");
     return;
   }
@@ -94,9 +95,10 @@ function assess(before, after, direction = "both") {
       const newParameters = new Map((newEntry.op.parameters ?? []).filter(p => p && p.name && p.in).map(p => [p.in + ":" + p.name, p]));
       for (const [id, p] of newParameters) {
         const prior = oldParameters.get(id);
-        if (prior && !prior.required && p.required) addFinding(findings, key, "parameter:" + id, "breaking", "compatible", "An optional parameter became required.");
+        if (p.required && (!prior || !prior.required)) addFinding(findings, key, "parameter:" + id, "breaking", "compatible", "A request parameter became newly required.");
+        if (prior?.schema && p.schema) compareInlineSchema(prior.schema, p.schema, "parameters/" + id + "/schema", "request", findings, key);
       }
-      if (oldEntry.op.requestBody && newEntry.op.requestBody && !oldEntry.op.requestBody.required && newEntry.op.requestBody.required) {
+      if (!oldEntry.op.requestBody?.required && newEntry.op.requestBody?.required) {
         addFinding(findings, key, "requestBody/required", "breaking", "compatible", "The request body became required.");
       }
       const oldContent = oldEntry.op.requestBody?.content ?? {}, newContent = newEntry.op.requestBody?.content ?? {};
