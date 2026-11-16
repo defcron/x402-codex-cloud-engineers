@@ -109,7 +109,7 @@ class PaginationTraceTests(unittest.TestCase):
         with self.assertRaises(ContractInputError):
             parse_request(b"not-json")
         with self.assertRaises(ContractInputError):
-            parse_request(b"\\xff")
+            parse_request(bytes([255]))
         with self.assertRaises(ContractInputError):
             parse_request(b" " * 65537)
 
