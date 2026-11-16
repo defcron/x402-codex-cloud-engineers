@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 03:05 UTC  
+Last reconciled: 2026-11-16 03:10 UTC  
 Owner: CTO / central production integrator
 
 ## Canonical production catalog
@@ -26,7 +26,9 @@ Status at checkpoint: 50 existing chats received the restart prompt; acknowledge
 | 22–26 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 | 27 | `http_forwarding_policy_audit_v1` — audit caller-supplied forwarding policy against observed headers across a bounded proxy chain; report allowlist violations, missing required forwards, and untrusted forwarded identity claims. Distinct customer task from #47 header normalization/duplicate detection, #11 `WWW-Authenticate` parsing, #13 media-type negotiation, and live single-header parsers. | Reserved by Engineer 27 at 2026-11-16 03:03 UTC after live catalog check (v0.8.206); implementation not started; no deployment/payment/submission; no submission quota reserved. |
 | 28 | `openapi-version-compatibility-matrix` — compare full OpenAPI operation surfaces across releases | Reserved in branch `engineer-28-openapi-compatibility-matrix`; shared registry reconciliation pending; implementation status per branch checkpoint |
-| 29–42 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 29–39 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
+| 40 | `http-cache-policy-evaluator` — analyze caller-supplied request/response metadata for HTTP cache storage scope and freshness, without fetching a URL | Reserved 2026-11-16 03:09 UTC in branch `engineer-40-http-cache-policy-evaluator`, checkpoint commit `e1ce9cf2f97992f87669a03ffa5e559b3331602f`. Starting JSON flatten/unflatten concept was abandoned because live OpenAPI v0.8.206 already exposes both `/v1/json-flatten` and `/v1/json-unflatten`. Cache evaluator checked against all 74 live operations, visible reservations 16/21/27/28/43/50, and matching PayAPI catalog searches; no matching cache-policy evaluator found. The 01–15, 17–20, 22–26, 29–39, 41–42, and 44–49 title concepts are not reconciled, so global overlap confirmation remains pending. No deployment, payment, submission, or quota reservation; no individual production target assigned. |
+| 41–42 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 | 43 | `x402-settlement-receipt-reconcile` — reconcile x402 settlement fields with expected EVM ERC-20 transfer evidence | Implemented prototype in local `work` checkout at base `01168bc`; 8 focused tests pass; files remain local/uncommitted. No deployment, live RPC verification, or PayAPI submission. |
 | 44–49 | Use each engineer's existing chat title | Awaiting acknowledgement and live-catalog deduplication; no submission quota reserved |
 | 50 | `webhook-delivery-evidence-bundle` — normalize bounded, caller-supplied webhook event/attempt exports into per-event payload digests, attempt timelines, retry/result anomalies, and a reproducible evidence manifest; post-hoc only, no sending or provenance claims | Reserved 2026-11-16 03:04 UTC after live OpenAPI 0.8.206 and PayAPI catalog comparison; distinct from visible engineer 43 settlement-receipt reconciliation, scheduler/relay/signature-verification listings, and current worker utilities. Peer assignments 01–42 and 44–49 remain unreconciled. Implementation pending writable isolated workspace; no individual deployment target assigned |
