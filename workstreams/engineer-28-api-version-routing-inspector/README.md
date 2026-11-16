@@ -14,11 +14,17 @@ Output returns the spec metadata, whether selectors are unmatched/selected/ambig
 
 Example:
 
-    {
-      "openapi_json": "{"openapi":"3.1.0","info":{"title":"Catalog","version":"2.0"},"paths":{"/v2/items/{id}":{"get":{"operationId":"getItem"}}}}",
-      "request": {"method":"GET","path":"/v2/items/42","query":[],"headers":[]},
-      "selectors": [{"source":"path_prefix","value":"/v2","version":"2"}]
-    }
+    const openapi_json = JSON.stringify({
+      openapi: "3.1.0",
+      info: { title: "Catalog", version: "2.0" },
+      paths: { "/v2/items/{id}": { get: { operationId: "getItem" } } }
+    });
+    const request = {
+      openapi_json,
+      request: { method: "GET", path: "/v2/items/42", query: [], headers: [] },
+      selectors: [{ source: "path_prefix", value: "/v2", version: "2" }]
+    };
+    console.log(inspectApiVersionRouting(request));
 
 Expected essentials:
 
@@ -30,8 +36,8 @@ Expected essentials:
 
 ## Limits and failure behavior
 
-- OpenAPI JSON: at most 262,144 characters, 1,000 paths, 2,000 operations, 30,000 JSON nodes, and depth 64.
-- Request path: at most 2,048 characters. Query/header pairs: at most 64 each. Selector rules: 1–32. Names/values have explicit per-field caps enforced in the source.
+- HTTP JSON body: at most 524,288 bytes. OpenAPI JSON within it: at most 262,144 characters, 1,000 paths, 2,000 operations, 30,000 JSON nodes, and depth 64.
+- Unknown fields at the request body, request object, selector, and query/header pair levels are rejected.\n- Request path: at most 2,048 characters. Query/header pairs: at most 64 each. Selector rules: 1–32. Names/values have explicit per-field caps enforced in the source.
 - Empty/malformed or unsupported documents, invalid methods, malformed path templates, unsupported selectors, CR/LF in header inputs, and invalid request shapes return RoutingInspectorError (400); bounded-size violations return status 413.
 - Path matching is segment-wise and does not percent-decode, fetch server URLs, resolve references, or execute document content. Static exact path wins over templates; multiple matching templates are reported ambiguous.
 - Version resolution only applies caller rules. It does not infer conventional version names or parse Accept media types. It does not include auth middleware; integrations must not echo/store captured credentials.
