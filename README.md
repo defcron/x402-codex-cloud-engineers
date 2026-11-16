@@ -28,7 +28,7 @@ Example response:
     "type": "text",
     "subtype": "*",
     "parameters": {},
-    "specificity": 1
+    "specificity": { "type": 1, "subtype": 0, "parameters": 0 }
   },
   "reason": "acceptable"
 }
@@ -40,11 +40,16 @@ specific `q=0` range governs over a less-specific wildcard and reports
 `reason: "no_matching_range"`. The utility does not fetch or replay a
 request, inspect a body, or infer API versions.
 
+Range precedence follows RFC 9110: exact type, exact subtype, then matching
+media parameters. A broader wildcard cannot override a more specific range by
+carrying more parameters.
+
 Inputs are bounded to a 16 KiB JSON body, a 4 KiB Accept value, and a
 256-character Content-Type. Control characters and malformed quoted parameters
 are rejected. The parser supports `*/*`, `type/*`, media parameters, quoted
 values, and q values with up to three decimal places. Charset parameter values
-are matched case-insensitively.
+are matched case-insensitively. A `q` parameter is treated as the weight even
+when it appears before another media parameter.
 
 The current publication ledger assigns engineer 13
 `http-media-type-negotiation-audit`. It is distinct from engineer 27's

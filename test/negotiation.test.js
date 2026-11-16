@@ -7,6 +7,13 @@ test("chooses the highest quality match", () => {
 test("a specific zero quality range overrides wildcard acceptance", () => {
   assert.equal(negotiate("text/*;q=0.8, text/html;q=0, */*;q=0.2", ["text/html", "text/plain"]).selected, "text/plain");
 });
+test("media-type specificity outranks parameter count on broader wildcards", () => {
+  const result = auditNegotiation('*/*;a="1";b="2";q=1, text/*;q=0.5, text/plain;q=0.2',
+    'text/plain;a="1";b="2"');
+  assert.equal(result.quality, 0.2);
+  assert.equal(result.matched_range.type, "text");
+  assert.equal(result.matched_range.subtype, "plain");
+});
 test("matches media parameters and applies range specificity", () => {
   assert.equal(negotiate('text/plain;format=flowed;q=0.9, text/plain;q=0.5', ["text/plain", "text/plain;format=flowed"]).selected, "text/plain;format=flowed");
 });
@@ -26,7 +33,7 @@ test("audits an acceptable captured Accept and Content-Type pair", () => {
     content_type: "application/json",
     acceptable: true,
     quality: 1,
-    matched_range: { type: "application", subtype: "json", parameters: {}, specificity: 2 },
+    matched_range: { type: "application", subtype: "json", parameters: {}, specificity: { type: 1, subtype: 1, parameters: 0 } },
     reason: "acceptable",
   });
 });
@@ -59,6 +66,12 @@ test("audits parameterized Content-Type using charset case-insensitively", () =>
   assert.equal(result.quality, 0.7);
   assert.deepEqual(result.matched_range.parameters, { charset: "UTF-8", profile: "a;b" });
 });
+test("recognizes q as weight even when a media parameter follows it", () => {
+  const result = auditNegotiation("text/plain;q=0.8;charset=UTF-8", "text/plain;charset=utf-8");
+  assert.equal(result.acceptable, true);
+  assert.equal(result.quality, 0.8);
+  assert.deepEqual(result.matched_range.parameters, { charset: "UTF-8" });
+});
 test("rejects invalid q values and offered media types", () => {
   assert.throws(() => negotiate("text/plain;q=1.2", ["text/plain"]), TypeError);
   assert.throws(() => negotiate("*/*", ["text"]), TypeError);
@@ -78,7 +91,7 @@ test("HTTP endpoint returns JSON pair-audit result", async () => {
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     content_type: "application/json", acceptable: true, quality: 1,
-    matched_range: { type: "application", subtype: "json", parameters: {}, specificity: 2 },
+    matched_range: { type: "application", subtype: "json", parameters: {}, specificity: { type: 1, subtype: 1, parameters: 0 } },
     reason: "acceptable",
   });
 });

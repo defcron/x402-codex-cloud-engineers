@@ -90,30 +90,35 @@ function parseAccept(value) {
     const parsed = parseMediaType(entry, { allowWildcard: true });
     let quality = 1;
     const params = new Map();
-    let afterQuality = false;
     for (const [name, paramValue] of parsed.params) {
       if (name === "q") {
         if (!/^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(paramValue)) {
           throw new TypeError("Accept q values must be between 0 and 1 with at most 3 decimals");
         }
         quality = Number(paramValue);
-        afterQuality = true;
-      } else if (!afterQuality) params.set(name, paramValue);
+      } else params.set(name, paramValue);
     }
     return { ...parsed, params, quality, index };
   });
 }
 function rangeSpecificity(range, offered) {
-  if (range.type !== "*" && range.type !== offered.type) return -1;
-  if (range.subtype !== "*" && range.subtype !== offered.subtype) return -1;
+  if (range.type !== "*" && range.type !== offered.type) return null;
+  if (range.subtype !== "*" && range.subtype !== offered.subtype) return null;
   for (const [key, value] of range.params) {
     const offeredValue = offered.params.get(key);
     const equal = key === "charset"
       ? offeredValue?.toLowerCase() === value.toLowerCase()
       : offeredValue === value;
-    if (!equal) return -1;
+    if (!equal) return null;
   }
-  return (range.type === "*" ? 0 : 1) + (range.subtype === "*" ? 0 : 1) + range.params.size;
+  return {
+    type: range.type === "*" ? 0 : 1,
+    subtype: range.subtype === "*" ? 0 : 1,
+    parameters: range.params.size,
+  };
+}
+function compareSpecificity(a, b) {
+  return a.type - b.type || a.subtype - b.subtype || a.parameters - b.parameters;
 }
 export function auditNegotiation(accept, contentType) {
   const content = parseMediaType(contentType);
@@ -123,8 +128,8 @@ export function auditNegotiation(accept, contentType) {
   const ranges = parseAccept(accept);
   const matches = ranges
     .map((range) => ({ range, specificity: rangeSpecificity(range, content) }))
-    .filter(({ specificity }) => specificity >= 0)
-    .sort((a, b) => b.specificity - a.specificity || a.range.index - b.range.index);
+    .filter(({ specificity }) => specificity !== null)
+    .sort((a, b) => compareSpecificity(b.specificity, a.specificity) || a.range.index - b.range.index);
   const governing = matches[0];
   if (!governing) {
     return { content_type: contentType, acceptable: false, quality: 0, matched_range: null, reason: "no_matching_range" };
@@ -152,15 +157,15 @@ export function negotiate(accept, available) {
   const candidates = [];
   for (const offer of offers) {
     const matches = ranges.map((range) => ({ range, specificity: rangeSpecificity(range, offer.parsed) }))
-      .filter(({ specificity }) => specificity >= 0)
-      .sort((a, b) => b.specificity - a.specificity || a.range.index - b.range.index);
+      .filter(({ specificity }) => specificity !== null)
+      .sort((a, b) => compareSpecificity(b.specificity, a.specificity) || a.range.index - b.range.index);
     const governing = matches[0];
     if (governing && governing.range.quality > 0) candidates.push({
       mediaType: offer.value, quality: governing.range.quality,
       specificity: governing.specificity, acceptIndex: governing.range.index, offerIndex: offer.index,
     });
   }
-  candidates.sort((a, b) => b.quality - a.quality || b.specificity - a.specificity ||
+  candidates.sort((a, b) => b.quality - a.quality || compareSpecificity(b.specificity, a.specificity) ||
     a.acceptIndex - b.acceptIndex || a.offerIndex - b.offerIndex);
   return { selected: candidates[0]?.mediaType ?? null,
     candidates: candidates.map(({ mediaType, quality }) => ({ mediaType, quality })) };

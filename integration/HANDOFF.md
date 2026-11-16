@@ -17,6 +17,9 @@ public API now implements the ledger's audit job.
   names.
 - Live routes `/v1/http-link-parse`, `/v1/http-retry-after`, and
   `/v1/http-content-disposition` parse other header fields.
+- Live OpenAPI `0.8.207` also exposes `/v1/agent-utilities`; its published
+  operation list includes those three parsers but not an Accept/Content-Type
+  mismatch audit.
 
 The new job evaluates one response media type against one request preference.
 It does not audit forwarding trust, resolve API versions, normalize arbitrary
@@ -36,5 +39,5 @@ header collections, or parse the other catalog headers.
   deployment target or quota slot for any engineer.
 
 No production code was changed, deployed, or submitted to PayAPI. Local checks:
-`npm test` passed 15 tests; `node --check` passed for implementation and test
+`npm test` passed 17 tests; `node --check` passed for implementation and test
 files; checkpoint JSON and whitespace checks passed.
