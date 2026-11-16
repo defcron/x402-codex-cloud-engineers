@@ -75,5 +75,3 @@ app.post("/v1/uri-template", async (c) => {
 ```
 
 Merge `openapi-uri-template-fragment.json` into the generated OpenAPI document, add the same example as `/examples/uri-template`, add discovery text, and register a free MCP catalog tool pointing to the paid route. Then run the production repo's `npm test` and `npm run build` before deployment. These integration steps have not been applied or run in that repository.
-
-Merge `openapi-uri-template-fragment.json` into the generated OpenAPI document, add a public example and discovery text, and register a free MCP catalog tool pointing to the paid route. Then run the production repo's `npm test` and `npm run build` before deployment. These integration steps have not been applied or run in that repository.
