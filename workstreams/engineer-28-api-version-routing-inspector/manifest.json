@@ -1,0 +1,95 @@
+{
+  "service_key": "api-version-routing-inspector",
+  "engineer": 28,
+  "state": "isolated_artifact_ready_for_central_integration_review",
+  "customer_job": "Resolve an explicitly declared API version selector and the operation matched by one captured request against one OpenAPI document.",
+  "method": "POST",
+  "path": "/v1/api-version-routing-inspector",
+  "price_usdc_candidate": "0.005",
+  "runtime_model_calls": 0,
+  "runtime_external_api_calls": 0,
+  "inputs": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["openapi_json", "request", "selectors"],
+    "properties": {
+      "openapi_json": { "type": "string", "maxLength": 262144, "description": "OpenAPI 3.0/3.1 JSON; no refs or server URL fetch." },
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["method", "path"],
+        "properties": {
+          "method": { "type": "string", "enum": ["GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"], "maxLength": 16 },
+          "path": { "type": "string", "maxLength": 2048, "description": "Absolute path only; do not include query or fragment." },
+          "query": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/pair" } },
+          "headers": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/pair" }, "description": "Header names match case-insensitively. Values are never echoed." }
+        }
+      },
+      "selectors": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 32,
+        "items": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source", "version", "value"],
+              "properties": {
+                "source": { "const": "path_prefix" },
+                "version": { "type": "string", "maxLength": 64 },
+                "value": { "type": "string", "maxLength": 512, "description": "Absolute path prefix, matched on segment boundary." }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source", "version", "name", "value"],
+              "properties": {
+                "source": { "enum": ["query", "header"] },
+                "version": { "type": "string", "maxLength": 64 },
+                "name": { "type": "string", "maxLength": 128 },
+                "value": { "type": "string", "maxLength": 256 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "$defs": {
+      "pair": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 128 },
+          "value": { "type": "string", "maxLength": 1024 }
+        }
+      }
+    }
+  },
+  "outputs": {
+    "selector.status": ["unmatched", "selected", "ambiguous"],
+    "route.status": ["matched", "not_found", "method_not_allowed", "ambiguous"],
+    "route.allowed_methods": "Sorted methods when a matching path lacks the requested method.",
+    "route.matched_operation": "Method, OpenAPI path template, operationId, and summary; null when no unique operation is selected.",
+    "privacy": "Raw request query/header values are not returned."
+  },
+  "errors": {
+    "400": "Malformed input, unsupported OpenAPI, invalid method/path/template, or unsupported selector.",
+    "413": "Input, pair count, selector count, path count, operation count, JSON node, or nesting limit exceeded."
+  },
+  "integration": {
+    "source_repository": "defcron/agent-evidence-utility",
+    "handler_module": "workstreams/engineer-28-api-version-routing-inspector/inspect.mjs",
+    "export": "inspectApiVersionRouting",
+    "registration": "Central integrator should adapt the export to the existing Worker router and existing x402 route middleware; do not create a parallel payment flow.",
+    "discovery": "Before publication, register the real input/output schema, example, and caveats in the existing OpenAPI/MCP discovery surfaces.",
+    "payment_verification": "Confirm actual live HTTP 402 price, network, asset, and payTo from the integrated route; price candidate is $0.005 USDC only.",
+    "deployment": "No individual Worker, route, deployment permission, or PayAPI quota slot has been assigned. This manifest does not authorize deployment or submission."
+  },
+  "distinctness": {
+    "engineer_29": "Compares two OpenAPI documents and reports directional breaking changes; this endpoint inspects one request against one document and caller-declared selectors.",
+    "engineer_42": "Analyzes Accept/vendor-media-type negotiation; this endpoint does not interpret Accept."
+  }
+}
