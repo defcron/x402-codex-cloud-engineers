@@ -1,6 +1,6 @@
 # x402 Publication Coordination Ledger
 
-Last reconciled: 2026-11-16 03:10 UTC  
+Last reconciled: 2026-11-16 03:46 UTC  
 Owner: CTO / central production integrator
 
 ## Canonical production catalog
@@ -35,7 +35,7 @@ Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is 
 | 14 | `openapi-security-reference-check` — find dangling/malformed security scheme references in a supplied spec | Assigned; distinct from #44's explanatory summary |
 | 15 | `rfc9457-problem-detail-constructor` — construct a bounded Problem Details object from explicit fields | Assigned; distinguish from #12 validation and #38 mapping |
 | 16 | `api-pagination-contract-check` — inspect captured API response traces for pagination completeness | Reservation recorded by Engineer 16; reconcile artifact checkpoint |
-| 17 | `x402-resource-metadata-consistency` — compare caller-supplied payment challenge and resource manifest fields | Reassigned from existing challenge inspection/offer comparison; return implementation/test patch |
+| 17 | `x402-resource-metadata-consistency` — compare caller-supplied payment challenge and resource manifest fields | Integrated in production commit `329dfe6` (carried in release `0.8.208`, commit `b12e94d`); full suite 385/385 passed, Worker build and Wrangler dry-run passed; live route `/v1/x402-resource-metadata-consistency` appears in OpenAPI and unpaid POST returned 402 with `$0.005` on Base. Cloudflare version `bf24a9e0-9a0e-45f7-a2ea-b80050ea23cc`. No PayAPI submission/verification or organic paid receipt. |
 | 18 | `a2a-task-state-transition-audit` — validate captured task state changes against A2A lifecycle rules | Assigned; return implementation/test patch |
 | 19 | `mcp-jsonrpc-error-envelope-audit` — inspect captured JSON-RPC error envelopes and tool-call correlation | Reassigned from overlapping tool-argument lint; return implementation/test patch |
 | 20 | `a2a-agent-card-capability-check` — validate declared A2A agent-card capability fields | Assigned; no quota reserved |
@@ -68,7 +68,7 @@ Last roster snapshot: 50 existing chats; 26 active, 24 idle. An active label is 
 | 47 | `http-header-normalization-duplicate-check` — canonicalize supplied header pairs and detect case-insensitive duplicates | Reassigned; distinguish from #02 cache directives, #11 auth challenge, and #13 media negotiation |
 | 48 | `http-multipart-boundary-field-inspector` — inspect bounded multipart bodies for part headers, boundaries, and field names | Assigned; no quota reserved |
 | 49 | `timezone-local-time-disambiguation` — classify one local date-time in an IANA zone as valid, skipped, or ambiguous | Reassigned from existing timestamp conversion; return implementation/test patch |
-| 50 | `webhook-delivery-evidence-bundle` — turn caller-supplied event/attempt records into a post-hoc timeline and digest manifest | Distinctness checked against live Worker OpenAPI v0.8.206 and assigned #26 retry planner/#46 signature canonicalizer; new behavior is post-hoc attempt timeline + payload fingerprints/anomaly analysis. Implemented in `defcron/agent-evidence-utility` branch `engineer-50-webhook-delivery-evidence`, commit `eaff2e28da951e7d9d03b55e05858b5ae3c3292c`, draft PR #1. Focused tests 6/6; full suite 379/379; worker test 1/1; build and Wrangler dry-run passed. No live route, deployment, payment, PayAPI submission, target, or quota slot. Env identity for this chat not verifiable from runtime metadata; saved config exists but mapping to active runtime is unavailable. Uncertain `html-forms` submission remains unreconciled. |
+| 50 | `webhook-delivery-evidence-bundle` — turn caller-supplied event/attempt records into a post-hoc timeline and digest manifest | Integrated in production commit `b12e94d` (release `0.8.208`) after independent diff conflict resolution; distinct from #26 retry planning and #46 signature canonicalization. Full suite 385/385 passed, Worker build and Wrangler dry-run passed. Live example and OpenAPI route verified; unpaid POST returned 402 with `$0.005` on Base. Cloudflare version `bf24a9e0-9a0e-45f7-a2ea-b80050ea23cc`. Engineer's original PR #1 closed after integration. No PayAPI submission/verification or organic paid receipt; no quota allocated. Saved environment is available for newly created cloud chats, but runtime configuration of this existing chat is not observable and cannot be retargeted with available app controls. Uncertain `html-forms` submission remains unreconciled. |
 
 **Artifact transfer protocol:** cloud workspaces have reported read-only mounts. For an artifact not available through a pushed branch, its owner must reply with a complete unified diff (including tests and README/example), exact base commit, exact test command/output, and source hashes. The CTO integrates it in the writable production repo, reruns checks, and keeps the cloud artifact separately identified. A reply patch or passing prototype test is not a production deployment.
 
@@ -90,7 +90,7 @@ A submission attempt is not automatically an available slot. Before any new subm
 ## In-flight HTML forms submission
 
 Route: https://agent-evidence-extractor.defcronyke.workers.dev/v1/html-forms  
-Deployment: version 0.8.206, Cloudflare version 046262b8-00ed-45c4-80a2-28a2f58e18a9  
+Deployment: release 0.8.208, Cloudflare version bf24a9e0-9a0e-45f7-a2ea-b80050ea23cc  
 Price: USD 0.005 per call; caller-supplied HTML only; no runtime model calls.
 
 A first PayAPI attempt was rejected because its placeholder detector treated the HTML sample as a placeholder. One follow-up submission used the public example URL and an expected-output sample. Its tool result was truncated during capture; listing ID and status are unknown. Do not submit this route again until the existing request is reconciled via an authoritative receipt/status. This uncertainty consumes unknown quota until resolved. No wallet top-up or self-funded test is authorized.
