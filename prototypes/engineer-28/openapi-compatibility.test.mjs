@@ -52,6 +52,14 @@ test("rejects malformed JSON, unsupported OpenAPI, and invalid direction", () =>
   assert.throws(() => compareOpenApiVersions(spec({}), spec({}), { direction: "sideways" }), /direction/);
 });
 
+test("rejects empty input and excessive JSON nesting", () => {
+  assert.throws(() => compareOpenApiVersions("", spec({})), /non-empty JSON string/);
+  const root = { openapi: "3.1.0", paths: {} };
+  let node = root;
+  for (let i = 0; i < 66; i++) node = node.next = {};
+  assert.throws(() => compareOpenApiVersions(JSON.stringify(root), spec({})), /depth 64/);
+});
+
 test("enforces the input cap", () => {
   assert.throws(() => compareOpenApiVersions(" ".repeat(131073), spec({})), /131072 characters/);
 });
