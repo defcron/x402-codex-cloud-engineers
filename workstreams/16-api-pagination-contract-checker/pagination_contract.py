@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
+MAX_PAYLOAD_BYTES = 65536
 MAX_PAGES = 10
 MAX_ITEMS_PER_PAGE = 100
 MAX_TOTAL_ITEMS = 1000
@@ -191,12 +192,27 @@ def check_pagination_trace(payload: Any) -> dict:
     }
 
 
+def parse_request(raw: bytes) -> dict:
+    """Parse a bounded UTF-8 JSON request and validate its pagination trace."""
+    if not isinstance(raw, bytes) or len(raw) > MAX_PAYLOAD_BYTES:
+        raise ContractInputError("request body must be at most 65536 bytes")
+    import json
+
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except UnicodeDecodeError as exc:
+        raise ContractInputError("request body must be UTF-8 JSON") from exc
+    except json.JSONDecodeError as exc:
+        raise ContractInputError("request body must be valid JSON") from exc
+    return check_pagination_trace(payload)
+
+
 if __name__ == "__main__":
     import json
     import sys
 
     try:
-        request = json.load(sys.stdin)
-        print(json.dumps(check_pagination_trace(request), separators=(",", ":")))
-    except (json.JSONDecodeError, ContractInputError) as exc:
+        raw = sys.stdin.buffer.read(MAX_PAYLOAD_BYTES + 1)
+        print(json.dumps(parse_request(raw), separators=(",", ":")))
+    except ContractInputError as exc:
         print(json.dumps({"error": str(exc)}, separators=(",", ":")))
