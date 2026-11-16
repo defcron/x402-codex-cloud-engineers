@@ -14,8 +14,9 @@ function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 function boundedString(value, label, max, allowEmpty = false) {
-  if (typeof value !== "string" || (!allowEmpty && !value.trim())) throw new RoutingInspectorError(label + " must be a non-empty string.");
+  if (typeof value !== "string") throw new RoutingInspectorError(label + " must be a string.");
   if (value.length > max) throw new RoutingInspectorError(label + " exceeds " + max + " characters.", 413);
+  if (!allowEmpty && !value.trim()) throw new RoutingInspectorError(label + " must be a non-empty string.");
   return value;
 }
 function validateDocument(text) {
