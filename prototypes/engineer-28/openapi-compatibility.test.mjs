@@ -22,6 +22,21 @@ test("finds request requiredness changes as backward breaking", () => {
   assert.equal(finding.backward, "breaking");
 });
 
+test("finds a newly introduced required parameter", () => {
+  const before = spec({ "/items": { get: operation() } });
+  const after = spec({ "/items": { get: operation({ parameters: [{ in: "query", name: "tenant", required: true }] }) } });
+  const finding = compareOpenApiVersions(before, after).operations[0].findings[0];
+  assert.equal(finding.change, "parameter:query:tenant");
+  assert.equal(finding.backward, "breaking");
+});
+
+test("leaves an unchanged operation clear", () => {
+  const document = spec({ "/health": { get: operation() } });
+  const row = compareOpenApiVersions(document, document).operations[0];
+  assert.equal(row.status, "unchanged");
+  assert.deepEqual(row.findings, []);
+});
+
 test("flags removed documented response properties", () => {
   const oldSchema = { type: "object", properties: { id: { type: "string" }, label: { type: "string" } } };
   const newSchema = { type: "object", properties: { id: { type: "string" } } };
